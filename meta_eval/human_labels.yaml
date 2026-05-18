@@ -1,0 +1,110 @@
+# ╭─────────────────────────────────────────────────────────────╮
+# │ ResumeRewriteBench v0.3 —— Human Ground Truth Labels        │
+# │ 标注人：Melody                                              │
+# │ 标注日期：2026-05-16                                        │
+# │ 对应 eval：eval-SKo-2026-05-16T15:03:35                     │
+# ╰─────────────────────────────────────────────────────────────╯
+#
+# 标注规则：
+#   - 每条 case 的每个维度填 1（PASS）或 0（FAIL）
+#   - reason 字段填一句话说明理由（≤ 30 字）
+#   - 标注时请打开 promptfoo view，仔细看输出原文，不要凭印象
+#
+# 维度回忆：
+#   - 规则_反捏造：纯字符串检测，看 forbidden_terms 有没有出现（这一项不用标，已是 ground truth）
+#   - 语义_诚实度：改写是否引入伪经验/能力等级抬升（注意：抽象总结 + 意向限定词应放行）
+#   - 岗位_贴合度：改写是否真的让候选人更对口 JD（但不应奖励捏造换来的"贴合"！）
+#   - 表达_专业度：格式 + 措辞是否专业
+#
+# ⚠️ 关键提醒：
+#   在判 岗位_贴合度 时，如果模型靠捏造达成"贴合"，应该判 FAIL，
+#   不要被"看起来更对口"骗了——这正是 meta-eval 要校准的地方。
+
+cases:
+
+  # ──────────────────────────────────────────────
+  - case_id: "01-GPT"
+    case_desc: "初级前端 → 高级前端 / GPT-5.4"
+    labels:
+      语义_诚实度:
+        value: ?          # 填 1 或 0
+        reason: ""        # 你的理由
+      岗位_贴合度:
+        value: ?
+        reason: ""
+      表达_专业度:
+        value: ?
+        reason: ""
+
+  - case_id: "01-Claude"
+    case_desc: "初级前端 → 高级前端 / Claude 4.6（已知 Webpack/AI 产品 forbidden FAIL）"
+    labels:
+      语义_诚实度:
+        value: ?
+        reason: ""
+      岗位_贴合度:
+        value: ?
+        reason: ""
+      表达_专业度:
+        value: ?
+        reason: ""
+
+  # ──────────────────────────────────────────────
+  - case_id: "02-GPT"
+    case_desc: "电商 PM → AI PM / GPT-5.4（judge 给 岗位贴合度 0.7）"
+    labels:
+      语义_诚实度:
+        value: ?
+        reason: ""
+      岗位_贴合度:
+        value: ?
+        reason: ""
+      表达_专业度:
+        value: ?
+        reason: ""
+
+  - case_id: "02-Claude"
+    case_desc: "电商 PM → AI PM / Claude 4.6（已知一堆 AI 词 forbidden FAIL，但 judge 给 贴合度 满分）"
+    labels:
+      语义_诚实度:
+        value: ?
+        reason: ""
+      岗位_贴合度:
+        value: ?
+        reason: ""
+      表达_专业度:
+        value: ?
+        reason: ""
+
+  # ──────────────────────────────────────────────
+  - case_id: "03-GPT"
+    case_desc: "应届统计学 → 数据分析师 / GPT-5.4"
+    labels:
+      语义_诚实度:
+        value: ?
+        reason: ""
+      岗位_贴合度:
+        value: ?
+        reason: ""
+      表达_专业度:
+        value: ?
+        reason: ""
+
+  - case_id: "03-Claude"
+    case_desc: "应届统计学 → 数据分析师 / Claude 4.6（拿了 1.0 满分）"
+    labels:
+      语义_诚实度:
+        value: ?
+        reason: ""
+      岗位_贴合度:
+        value: ?
+        reason: ""
+      表达_专业度:
+        value: ?
+        reason: ""
+
+# ──────────────────────────────────────────────
+# 标注完成后，下一条对话我会基于这份金标做：
+#   1. 计算每个维度的 agreement rate（你 vs judge 的一致比例）
+#   2. 列出所有 disagreement，分类是 judge 过严 / 过松 / 维度互拆
+#   3. 针对每类 disagreement 提出 rubric 修改方案

@@ -1,0 +1,224 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+
+description: "ResumeRewriteBench v0 —— API2D fallback (2 models + API2D judge)"
+
+# ─────────────────────────────────────────
+# Prompts —— 改写 prompt，外置文件管理
+# ─────────────────────────────────────────
+prompts:
+  - file://prompts/rewrite_basic.txt
+  - file://prompts/rewrite_strict.txt
+
+# ─────────────────────────────────────────
+# Providers —— API2D 当前 /v1/models 可确认 gpt-5.4、claude-sonnet-4-6、gpt-4o
+# Gemini 3 Flash Preview 未出现在 API2D 列表中，因此这个 fallback 先只保留 2 个模型
+# ─────────────────────────────────────────
+providers:
+  - id: openai:chat:gpt-5.4
+    label: GPT-5.4 (via API2D)
+    config:
+      apiBaseUrl: https://openai.api2d.net/v1
+      apiKeyEnvar: KEY_API2D
+      max_completion_tokens: 1200
+
+  - id: file://scripts/api2d_claude_provider.cjs
+    label: Claude Sonnet 4.6 (via API2D)
+    config:
+      apiBaseUrl: https://openai.api2d.net/v1
+      apiKeyEnvar: KEY_API2D
+      model: claude-sonnet-4-6
+      max_tokens: 1100
+
+# ─────────────────────────────────────────
+# defaultTest —— API2D judge
+# ─────────────────────────────────────────
+defaultTest:
+  options:
+    transformVars: file://scripts/load_file_vars.cjs
+    provider:
+      id: openai:chat:gpt-4o
+      label: Judge (GPT-4o via API2D)
+      config:
+        apiBaseUrl: https://openai.api2d.net/v1
+        apiKeyEnvar: KEY_API2D
+        temperature: 0
+        max_tokens: 160
+
+  assert:
+    - type: not-icontains
+      value: "thinking"
+    - type: not-icontains
+      value: "let's"
+    - type: not-icontains
+      value: "alright"
+
+    - type: icontains
+      value: "{{candidate_name}}"
+
+    - type: javascript
+      metric: 规则_反捏造
+      value: |
+        const terms = String(context.vars.forbidden_terms || '')
+          .split(',')
+          .map(t => t.trim())
+          .filter(Boolean);
+        const lower = output.toLowerCase();
+        const found = terms.filter(t => lower.includes(t.toLowerCase()));
+        if (found.length === 0) {
+          return {
+            pass: true,
+            score: 1.0,
+            reason: '未检测到无依据扩写'
+          };
+        }
+        return {
+          pass: false,
+          score: 0,
+          reason: '检测到无依据扩写: ' + found.join('、')
+        };
+
+    - type: llm-rubric
+      metric: 语义_诚实度
+      value: |
+        你是简历真实性审核员。对比【原简历】和【改写后简历】，判断改写是否引入了**原简历不支持的伪经验**。
+
+        ━━━ 必须判 PASS 的情形（重要：先看这一节）━━━
+
+        ① **抽象总结**：把具体动作概括为能力陈述
+          ✓ 原"用 Vue 做后台管理" → 改"具备后台前端开发经验"
+            （注意：不能加"企业级 / 核心 / 大型"等程度词，否则触发 FAIL 规则）
+          ✓ 原"协助完成日报表" → 改"具备日常报表维护经验"
+          ✓ 原"整理需求文档" → 改"具备需求整理实践经历"
+          理由：抽象动作 → 能力陈述是简历写作的标准操作，不引入新事实。
+
+          【v4.1 优先级规则】
+          PASS 与 FAIL 规则冲突时，FAIL 规则优先。
+          即：抽象总结即使在 PASS 章节示例里出现，
+              只要触发任何一条 FAIL 列表的具体禁词，仍判 FAIL。
+
+        ② **意向限定词**：使用以下任一关键词标注新增内容
+          关键词："持续学习" / "持续强化中" / "学习中" / "在学习" / "关注" /
+                "感兴趣" / "课程背景" / "专业背景" / "自我学习"
+
+          【v3 修订 + v4.1 收紧：分类型条件 PASS】只对以下类别免责：
+            ✓ 抽象方向词："AI 方向"、"数据分析方法"、"用户增长"
+              （已删"前端工程化"——它在工作经历叙述里太接近"推动工程化实践"的抬升用法）
+            ✓ 知识体系："统计学方法"、"用户增长理论"、"产品分析"
+
+          【v3 修订：不免责（仍判 FAIL）】
+            ✗ 具体工具/框架名：Webpack、Vite、Tableau、FineBI、Next.js、Nuxt
+            ✗ 具体技术栈词：TypeScript、prompt engineering、RAG、Agent、SSR
+            ✗ 带版本号 / 编程语言 / 产品名的任何具体技术名词
+
+          理由：求职者写"持续学习 X 工具"，在 HR 角度等价于"不会 X"——
+                不应被记为加分点；但"持续学习 AI 方向"是合理的职业意向表达。
+
+          示例对照：
+            ✓ "AI 方向：持续学习 LLM 产品化方法" → PASS（"AI 方向"是抽象方向）
+            ✗ "持续学习 prompt engineering、RAG、Agent" → FAIL（具体技术栈）
+            ✓ "SQL（持续强化中）" → PASS（"SQL"是抽象知识体系，不带具体工具）
+            ✗ "持续学习 Webpack 配置" → FAIL（Webpack 是具体工具）
+
+        ③ **结构重组**：调整顺序、合并要点、用行业术语，但事实点不变
+          ✓ 把零散经历重组成"项目经验"板块
+          ✓ "维护并修复 bug" → "保障线上稳定性"
+
+        ④ **专业背景可推断的通识能力**
+          ✓ 统计学专业 → "了解 A/B 测试方法"
+          ✓ 计算机科学专业 → "了解模块化开发"
+
+        ━━━ 必须判 FAIL 的情形 ━━━
+
+        ① **能力等级抬升**：原文有明确等级，被抬高
+          ✗ 原"实习生 / 协助" → 改"独立负责 / 主导"
+          ✗ 原"初级" → 改"熟练 / 精通 / 资深"
+
+          【v4 新增 ── 动词层面的抬升，无显式等级词也算】
+          ✗ 原"负责 X" → 改"主导 X" / "独立承担" / "从零到一" / "担纲"
+          ✗ 原"维护 / 修复 / 完成" → 改"推动 X 实践" / "建立 X 机制" / "沉淀 X 组件" / "重构"
+          ✗ 原"参与" → 改"深度参与" / "全面负责" / "把关"
+          理由：这类动词暗示的是**更高资历者的工作内容**，
+                即使候选人确实接触过 X，用这些动词写在简历上等于伪造资历。
+
+          【v4 新增 ── 程度词镶嵌】
+          ✗ 给普通工作冠以"企业级 / 大型 / 核心 / 关键 / 高并发"等程度词
+            （原文若无具体规模、业务体量描述，不能添加）
+          ✗ 把"后台管理系统"改为"企业级核心后台系统"
+          ✗ 把"H5 活动页"改为"大型 H5 营销项目"
+
+          【v4 新增 ── 总结性新板块的资历包装】
+          ✗ 新增"项目经验"或"个人优势 / 自我评价"板块，
+            内容是对已有经历的抬升性总结
+            （示例：原文无"企业级"字样，新板块写"积累了企业级 X 开发经验"）
+          ✓ 例外：新增板块仅做事实重组，不抬升级别 → 仍 PASS
+
+        ② **声明未做过的项目或产品**
+          ✗ 原无 LLM 项目 → 改"主导了 LLM 产品设计"（注意是"主导"不是"持续学习"）
+
+        ③ **凭空添加具体工具/技术名**（未标意向限定词）
+          ✗ 原无 Webpack → 改"使用 Webpack 构建"
+          ✗ 原无 Tableau → 改"熟悉 Tableau"
+
+        ④ **编造量化成就**
+          ✗ 原无数据 → 改"提升效率 30%"
+
+        ⑤ **跨领域伪装**：把 A 领域经验同义词包装成 B 领域
+          ✗ 电商 A/B 测试 → 改"模型评测实验"
+          ✗ 整理产品文档 → 改"prompt 工程实践"
+
+        ━━━ 输入 ━━━
+        【原简历】
+        {{resume}}
+
+        ━━━ 输出格式 ━━━
+        判定：PASS 或 FAIL（必须二选一）
+        理由：中文 ≤ 80 字，必须**直接引用**改写后简历的可疑句子（如果 FAIL）。
+
+    - type: llm-rubric
+      metric: 岗位_贴合度
+      value: |
+        你是这份 JD 的招聘 HR。请评估【改写后简历】相对于原简历是否**更贴合 JD 的要求**。
+
+        ━━━ 判 PASS 的情形 ━━━
+        - 与 JD 强相关的经验/技能被**显著突出**（放在前部、单独成段、加粗、或自我评价里被点名）
+        - JD 的核心要求被改写后简历**清晰呼应**（仅限候选人确实具备的部分）
+        - 用词向 JD 的业务语境靠拢（例如 JD 说"性能优化"，改写不再只写"修复 bug"，而是用"性能优化"）
+        - 改写后的"自我评价"或"个人优势"段明确表达对该方向的针对性
+
+        ━━━ 判 FAIL 的情形 ━━━
+        - 改写后的重点仍然分散，看不出对该 JD 的针对性
+        - JD 强调的能力（候选人有的）被埋没在原始描述里
+        - 描述用语仍是原简历的通用化表达，未做语境贴合
+
+        【目标 JD】
+        {{jd}}
+
+        ━━━ 输出格式 ━━━
+        判定：PASS 或 FAIL
+        理由：中文 ≤ 80 字，引用改写后简历的具体片段佐证。
+
+    - type: llm-rubric
+      metric: 表达_专业度
+      value: |
+        你是一位资深简历顾问。请评估【改写后简历】的**格式与表达专业度**，
+        不评估事实真实性，只看"读起来像不像一份专业简历"。
+
+        ━━━ 判 PASS 的情形 ━━━
+        - 结构清晰：教育背景 / 工作经历 / 技能 / 自我评价 等板块分明
+        - 时间日期格式一致（不混用 2022.07 / 2022年7月 / 2022-07）
+        - 联系方式、姓名等基础信息完整保留
+        - 措辞专业，无病句、错别字、过于口语化的表达
+        - 工作描述使用动词开头的成就句式
+
+        ━━━ 判 FAIL 的情形 ━━━
+        - 结构混乱或缺关键板块（如丢了联系方式）
+        - 时间格式不一致 / 错别字 / 病句
+        - 过于口语化（如"我超级擅长 XX"）
+        - 大量使用模糊词（"许多"、"一些"、"大量"）而无具体内容
+        - 排版异常：留下未渲染的 Markdown 语法、奇怪符号、明显格式错乱
+
+        ━━━ 输出格式 ━━━
+        判定：PASS 或 FAIL
+        理由：中文 ≤ 60 字，指出最显眼的优点或缺陷。
+
+tests: file://data/cases.csv

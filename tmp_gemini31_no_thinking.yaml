@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+
+description: "Gemini 3.1 Pro no-thinking smoke"
+
+prompts:
+  - file://prompts/rewrite_basic.txt
+
+providers:
+  - id: openai:chat:gemini-3.1-pro-preview
+    label: Gemini 3.1 Pro Preview (via AiHubMix, showThinking=false)
+    config:
+      apiBaseUrl: https://api.aihubmix.com/v1
+      apiKeyEnvar: API_AIHUBMIX_KEY
+      timeout: 60000
+      max_tokens: 1200
+      showThinking: false
+
+tests:
+  - description: "Gemini 3.1 Pro no-thinking smoke"
+    vars:
+      candidate_name: 李婉清
+      resume: file://data/case_02_resume.txt
+      jd: file://data/case_02_jd.txt

@@ -1,0 +1,61 @@
+case_id,category,provider,success,score,规则_反捏造,语义_诚实度,岗位_贴合度,表达_专业度,failure_reason
+case_01,frontend_ai,GPT-5.4,False,0.875,1.0,1.0,0.0,1.0,1
+case_01,frontend_ai,Claude Sonnet 4.6,False,0.75,0.0,0.0,1.0,1.0,1
+case_01,frontend_ai,Gemini 3 Flash Preview,False,0.625,1.0,0.0,0.0,0.0,1
+case_02,pm_ai_transition,GPT-5.4,False,0.875,1.0,1.0,0.0,1.0,1
+case_02,pm_ai_transition,Gemini 3 Flash Preview,False,0.75,1.0,1.0,0.0,0.0,1
+case_02,pm_ai_transition,Claude Sonnet 4.6,False,0.875,0.0,1.0,1.0,1.0,1
+case_03,data_analysis_entry,Claude Sonnet 4.6,False,0.75,0.0,0.0,1.0,1.0,1
+case_03,data_analysis_entry,Gemini 3 Flash Preview,False,0.8125,1.0,1.0,0.0,0.5,1
+case_03,data_analysis_entry,GPT-5.4,True,1.0,1.0,1.0,1.0,1.0,
+case_04,backend_java,Claude Sonnet 4.6,False,0.75,0.0,0.0,1.0,1.0,1
+case_04,backend_java,GPT-5.4,False,0.875,0.0,1.0,1.0,1.0,1
+case_04,backend_java,Gemini 3 Flash Preview,True,1.0,1.0,1.0,1.0,1.0,
+case_05,ai_product_transition,GPT-5.4,False,0.875,1.0,0.0,1.0,1.0,1
+case_05,ai_product_transition,Gemini 3 Flash Preview,False,0.875,1.0,0.0,1.0,1.0,1
+case_05,ai_product_transition,Claude Sonnet 4.6,False,0.75,0.0,0.0,1.0,1.0,1
+case_06,education_delivery,Claude Sonnet 4.6,False,0.875,1.0,0.0,1.0,1.0,1
+case_06,education_delivery,Gemini 3 Flash Preview,False,0.75,1.0,0.0,1.0,0.0,1
+case_06,education_delivery,GPT-5.4,True,1.0,1.0,1.0,1.0,1.0,
+case_07,materials_energy,Claude Sonnet 4.6,False,0.875,1.0,0.0,1.0,1.0,1
+case_07,materials_energy,Gemini 3 Flash Preview,False,0.9375,1.0,1.0,1.0,0.5,1
+case_07,materials_energy,GPT-5.4,True,1.0,1.0,1.0,1.0,1.0,
+case_08,finance_securities,GPT-5.4,False,0.875,0.0,1.0,1.0,1.0,1
+case_08,finance_securities,Claude Sonnet 4.6,False,0.75,1.0,0.0,1.0,1.0,1
+case_08,finance_securities,Gemini 3 Flash Preview,False,0.875,1.0,1.0,1.0,1.0,1
+case_09,data_analysis,GPT-5.4,False,0.875,1.0,1.0,0.0,1.0,1
+case_09,data_analysis,Gemini 3 Flash Preview,False,0.6625,1.0,1.0,0.0,0.3,1
+case_09,data_analysis,Claude Sonnet 4.6,False,0.875,0.0,1.0,1.0,1.0,1
+case_10,content_ops,GPT-5.4,False,0.875,1.0,1.0,0.0,1.0,1
+case_10,content_ops,Gemini 3 Flash Preview,False,0.75,1.0,0.0,1.0,1.0,1
+case_10,content_ops,Claude Sonnet 4.6,True,1.0,1.0,1.0,1.0,1.0,
+case_11,cv_algorithm,GPT-5.4,False,0.75,1.0,0.0,1.0,1.0,1
+case_11,cv_algorithm,Claude Sonnet 4.6,False,0.75,1.0,0.0,1.0,1.0,1
+case_11,cv_algorithm,Gemini 3 Flash Preview,False,0.625,1.0,1.0,0.0,0.0,1
+case_12,junior_backend,GPT-5.4,False,0.875,0.0,1.0,1.0,1.0,1
+case_12,junior_backend,Claude Sonnet 4.6,False,0.875,0.0,1.0,1.0,1.0,1
+case_12,junior_backend,Gemini 3 Flash Preview,False,0.9625,1.0,1.0,1.0,0.7,1
+case_13,fpga_hardware,Gemini 3 Flash Preview,False,0.8125,1.0,1.0,1.0,0.5,1
+case_13,fpga_hardware,Claude Sonnet 4.6,False,0.975,1.0,1.0,1.0,0.8,1
+case_13,fpga_hardware,GPT-5.4,True,1.0,1.0,1.0,1.0,1.0,
+case_14,admin,Claude Sonnet 4.6,False,0.75,0.0,0.0,1.0,1.0,1
+case_14,admin,Gemini 3 Flash Preview,False,0.875,1.0,0.0,1.0,1.0,1
+case_14,admin,GPT-5.4,True,1.0,1.0,1.0,1.0,1.0,
+case_15,finance_assistant,Gemini 3 Flash Preview,False,0.875,1.0,1.0,1.0,1.0,1
+case_15,finance_assistant,Claude Sonnet 4.6,False,0.875,1.0,1.0,1.0,1.0,1
+case_15,finance_assistant,GPT-5.4,True,1.0,1.0,1.0,1.0,1.0,
+case_16,ui_design,Claude Sonnet 4.6,False,0.75,0.0,0.0,1.0,1.0,1
+case_16,ui_design,Gemini 3 Flash Preview,False,0.75,1.0,1.0,1.0,0.0,1
+case_16,ui_design,GPT-5.4,True,1.0,1.0,1.0,1.0,1.0,
+case_17,backend_java_en,Claude Sonnet 4.6,False,0.875,1.0,0.0,1.0,1.0,1
+case_17,backend_java_en,GPT-5.4,True,1.0,1.0,1.0,1.0,1.0,
+case_17,backend_java_en,Gemini 3 Flash Preview,True,1.0,1.0,1.0,1.0,1.0,
+case_18,ai_backend_intern,Claude Sonnet 4.6,False,0.875,1.0,0.0,1.0,1.0,1
+case_18,ai_backend_intern,Gemini 3 Flash Preview,False,0.875,1.0,0.0,1.0,1.0,1
+case_18,ai_backend_intern,GPT-5.4,True,1.0,1.0,1.0,1.0,1.0,
+case_19,chemical_process,Claude Sonnet 4.6,False,0.875,1.0,0.0,1.0,1.0,1
+case_19,chemical_process,Gemini 3 Flash Preview,False,0.95,1.0,1.0,1.0,0.6,1
+case_19,chemical_process,GPT-5.4,True,1.0,1.0,1.0,1.0,1.0,
+case_20,course_ops,GPT-5.4,False,0.875,1.0,0.0,1.0,1.0,1
+case_20,course_ops,Claude Sonnet 4.6,False,0.875,1.0,0.0,1.0,1.0,1
+case_20,course_ops,Gemini 3 Flash Preview,False,0.875,1.0,0.0,1.0,1.0,1

@@ -1,0 +1,279 @@
+Name: Candidate17
+Gender: Male
+Phone: [PHONE]
+Email：[EMAIL]
+Ethnicity: Han
+Date of Birth：[已脱敏]
+Years of Experience: 9 years
+University: Yangtze University
+Degree: Bachelor's
+Job Target: Java Development Engineer
+Education
+2010.09 - 2014.07 Yangtze University (Full-time Bachelor's) Computer Science and
+Technology
+Work Experience
+2020.11 - 2023.09 Youzan
+-
+Responsible for maintaining existing features and iterating on new
+requirements for the Beauty Industry business line.
+-
+-
+Primarily responsible for the transaction module, covering orders, payments,
+fulfillment, products, inventory management, channels, assets, etc.
+-
+2017.11 - 2020.10 SF Express
+-
+Participated in R&D for innovative products, including Pet/Infant Tickets,
+Express Transport products, etc., primarily responsible for the transaction
+module.
+-
+-
+Responsible for interfacing with and iterating on functions of the main
+network, mainly involving booking/scheduling cargo space, pickup/delivery, and
+securing scattered air transport resources.
+-
+2016.03 - 2017.09 OSChina
+-
+Primarily responsible for maintaining the crowdsourcing platform and
+developing new features, including the talent market, workspace, and service
+providers.
+-
+2014.07 - 2016.02 Pactera
+-
+Initially focused on iterating new features for existing systems, including
+secondary development for data re-entry.
+-
+-
+Later mainly participated in R&D for new systems, including metadata
+management.
+-
+Skills & Expertise
+-
+Possesses 9 years of Java development experience with solid Java fundamentals
+and a good understanding of JVM and GC.
+-
+-
+Proficient in using Spring Boot.
+-
+-
+Familiar with various Spring Cloud projects, including Eureka, Spring Cloud
+Config, Zuul, Ribbon, Hystrix, Feign.
+-
+-
+Proficient in using mainstream open-source frameworks such as Spring,
+SpringMVC, MyBatis.
+-
+-
+Solid database foundation, proficient in using MySQL, and familiar with MySQL
+principles.
+-
+-
+Familiar with Redis middleware, including Redis distributed locks.
+-
+-
+Familiar with Kafka message queues.
+-
+-
+Familiar with Maven and common Linux commands.
+-
+-
+Familiar with Dubbo middleware.
+-
+-
+Has practical experience in Domain-Driven Design (DDD) implementation.
+-
+-
+Capable of independently designing and developing features.
+-
+-
+Able to quickly locate and resolve production issues.
+-
+-
+Possesses good teamwork and communication skills. Responsible and diligent in
+work.
+-
+-
+Has several years of experience in the internet industry.
+-
+Project Experience
+Sub-Card Upgrade Project
+-
+Project Description: Enabling merchants to upgrade sold service-count cards
+(sub-cards) to new cards based on the remaining value of the old card plus a
+top-up payment from the customer.
+-
+-
+Responsibilities:
+-
+1.
+Responsible for designing the technical solution.
+2.
+3.
+Responsible for developing the card, order, and payment modules.
+4.
+-
+Key Points:
+-
+1.
+Previously, sub-cards had no concept of "value." Phase one handled it by
+setting total value as purchase amount, with each use's value being
+total value divided by total count.
+2.
+3.
+The deducted value from the old card needed to be reflected as a payment
+method, introducing a marked payment method for special handling of the
+sub-card deduction amount.
+4.
+-
+Tech Stack: Dubbo, SpringBoot, Mybatis, MySQL
+-
+-
+Achievement: Supported core merchants' demand for sub-card upgrades,
+indirectly aiding in new merchant acquisition.
+-
+Youzan Beauty Industry - Douyin Mini Program Integration
+-
+Project Description: Based on research into Douyin Mini Programs and
+statistics on merchant willingness to use them, decided to add the Douyin Mini
+Program channel to meet merchants' needs for more personalized sales within
+the Douyin app and enhance the competitiveness of the Beauty Industry products.
+-
+-
+Responsibilities:
+-
+1.
+Responsible for designing the technical solution.
+2.
+3.
+Acted as Project Manager to drive the project, control progress, and
+coordinate risk mitigation, ensuring on-time completion.
+4.
+5.
+Responsible for developing the order forward process, payment, and
+fulfillment modules.
+6.
+-
+Key Points:
+-
+1.
+This project required external integration, necessitating mapping out
+external processes, touchpoints, and defining interface/field
+specifications.
+2.
+3.
+Payments within Douyin Mini Programs are escrow payments, differing from
+previous systems, requiring consideration for integrating Douyin
+payments while maintaining compatibility with existing ones.
+4.
+-
+Tech Stack: Dubbo, SpringBoot, Mybatis, MySQL, HttpClient
+-
+-
+Achievement: Supported Beauty Industry merchants in gradually accessing the
+Douyin Mini Program.
+-
+Youzan Beauty Industry - Online Ordering System Refactoring
+-
+Project Description:
+-
+1.
+After several years of development, code complexity had multiplied,
+leading to increased maintenance costs and reduced efficiency in
+implementing new requirements. A decision was made to refactor the code
+to clarify business logic and structure, facilitating future maintenance
+and iteration.
+2.
+3.
+Considering the cost of refactoring all applications simultaneously, the
+online ordering scenario was chosen as a pilot. Success here would lead
+to gradual expansion to all scenarios.
+4.
+5.
+The refactoring theory was based on DDD and referenced the transaction
+design of the company's internal transaction platform team.
+6.
+7.
+The final implementation decomposed the online ordering process into
+orthogonal and complete components based on the following logic. These
+components were then sequenced to complete the flow: Parameter
+Validation -> Initialization -> Business Logic Validation -> Calculation
+-> Assembly -> Persistence -> Post-Persistence Processing
+8.
+-
+Responsibilities:
+-
+1.
+In the early phase, collaborated with colleagues to determine the
+refactoring approach and mapped out the business logic for online
+product ordering.
+2.
+3.
+Based on the chosen approach, identified the components for online
+product ordering, then proceeded with development, testing, and
+grayscale release.
+4.
+5.
+Completed refactoring for online service ordering, card ordering, and
+other scenarios, eventually transitioning from grayscale to full release.
+6.
+-
+Tech Stack: Dubbo, SpringBoot, Mybatis, MySQL
+-
+-
+Achievement:
+-
+1.
+Completed full refactoring of the online ordering scenario.
+2.
+3.
+Based on the successful implementation, summarized experience and shared
+it with the team, enabling the team to accumulate practical DDD
+experience.
+4.
+Wukong Express Transport
+-
+Project Description: Wukong Express Transport is a platform-based standard
+air freight product with service commitments and timeliness guarantees. It
+includes functions for product management, order management, transport
+management, operations management, and financial management. Simply put, it's
+a platform where merchants publish end-to-end logistics products for customers
+to purchase.
+-
+-
+Responsibilities: Responsible for requirement review, business analysis,
+database table design, and development related to the order service.
+-
+-
+Tech Stack: Eureka, Spring Cloud Config, Zuul, Ribbon, Hystrix, Feign,
+SpringBoot, MyBatis, MySQL, Kafka
+-
+-
+Achievement: Supported multiple freight forwarders in using the product.
+-
+Crowdsourcing Platform
+-
+Project Description: A service platform under the sharing economy for
+software release, project outsourcing/bidding, bounty development, and hiring
+developers. Includes modules for whole project outsourcing, bounties, part-
+time work, talent search, and service providers.
+-
+-
+Responsibilities:
+-
+o
+Responsible for development and maintenance related to the talent search
+module of the crowdsourcing platform, including the search process and
+talent market.
+o
+o
+Responsible for development and later maintenance of the Crowdsourcing
+2.0 revamp, including workspace development and talent search module
+optimization.
+o
+o
+Responsible for development of the Crowdsourcing 3.0 revamp,
+implementing service provider related functions.
+o
+-
+Tech Stack: Spring, SpringMVC, SpringJDBC, MySQL, Velocity, Vue.js
+-

@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>ResumeRewriteBench Meta-Eval 标注工具</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", Roboto, sans-serif;
+  margin: 0; padding: 20px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  line-height: 1.6;
+  font-size: 14px;
+}
+header {
+  background: white; padding: 16px 24px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 10;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+h1 { margin: 0; font-size: 20px; }
+.status { font-size: 13px; color: #666; }
+.status span { margin-left: 12px; padding: 4px 10px; background: #eef; border-radius: 6px; }
+.status span.done { background: #d4edda; color: #155724; }
+
+.data-loader {
+  background: white; padding: 20px;
+  border-radius: 12px; margin-bottom: 20px;
+}
+.data-loader h2 { margin-top: 0; font-size: 16px; }
+.data-loader p { color: #666; margin: 8px 0; }
+
+.case-card {
+  background: white; padding: 20px;
+  border-radius: 12px; margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.case-card h3 {
+  margin-top: 0; color: #1d1d1f;
+  padding-bottom: 12px; border-bottom: 1px solid #eee;
+}
+.case-card .meta { color: #666; font-size: 13px; margin: 4px 0 16px; }
+
+.three-column { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 12px; margin: 16px 0; }
+.three-column .col {
+  background: #fafafa; padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+.three-column .rewrite {
+  background: linear-gradient(180deg, #fffdf5 0%, #fff8ea 100%);
+  border-color: #f8d38a;
+  box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.08);
+}
+.three-column .col h4 {
+  margin: 0 0 8px; font-size: 12px; color: #888;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.three-column .rewrite h4 {
+  color: #b45309;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.three-column pre {
+  white-space: pre-wrap; font-size: 12px;
+  max-height: 380px; overflow-y: auto;
+  margin: 0; font-family: inherit;
+  color: #1d1d1f;
+}
+.three-column .rewrite pre {
+  background: linear-gradient(180deg, #fffef8 0%, #fff9ef 100%);
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #f4dfb1;
+}
+
+.rewrite-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #92400e;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  border-radius: 999px;
+  padding: 2px 8px;
+  text-transform: none;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.rewrite-highlight {
+  background: linear-gradient(180deg, rgba(255, 220, 138, 0.45), rgba(255, 193, 7, 0.28));
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.12);
+}
+
+.rewrite-added-line {
+  display: block;
+  margin: 1px 0;
+  padding: 0 4px;
+  border-left: 3px solid #f59e0b;
+  background: rgba(255, 243, 205, 0.72);
+}
+
+.rewrite-soft-line {
+  display: block;
+  margin: 1px 0;
+  padding: 0 4px;
+  background: rgba(255, 243, 205, 0.32);
+}
+
+.col-link-hint {
+  font-size: 11px;
+  color: #a16207;
+  margin: 0 0 10px;
+}
+
+.doc-view {
+  max-height: 380px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  scroll-behavior: smooth;
+}
+
+.doc-gap {
+  height: 10px;
+}
+
+.doc-block {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #1d1d1f;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: left;
+  white-space: pre-wrap;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s, box-shadow 0.15s;
+}
+
+.doc-block:hover {
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+.doc-block.is-heading {
+  font-weight: 600;
+  color: #374151;
+}
+
+.doc-block.is-faded {
+  opacity: 0.42;
+}
+
+.doc-block.is-source {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.12);
+}
+
+.doc-block.is-match {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.rewrite .doc-block.rewrite-added {
+  border-left: 3px solid #f59e0b;
+  background: rgba(255, 243, 205, 0.72);
+}
+
+.rewrite .doc-block.rewrite-soft {
+  background: rgba(255, 243, 205, 0.32);
+}
+
+.rewrite .doc-block.is-source {
+  border-left-color: #3b82f6;
+}
+
+.judge-summary {
+  background: #fffbeb; padding: 12px 14px;
+  border-radius: 8px; font-size: 13px;
+  margin: 12px 0;
+  border-left: 3px solid #f59e0b;
+}
+.judge-summary strong { color: #92400e; }
+
+.dimensions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+.dimension {
+  background: #fafafa; padding: 14px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+.dimension.labeled { border-color: #34c759; background: #f0fff4; }
+.dimension.disagree { border-color: #ff9500; background: #fffbeb; }
+.dimension h4 { margin: 0 0 4px; font-size: 13px; }
+.dimension .desc { font-size: 11px; color: #888; margin: 0 0 10px; }
+
+.judge-verdict {
+  font-size: 12px; padding: 6px 10px;
+  background: white; border-radius: 6px;
+  margin-bottom: 10px;
+}
+.judge-score { font-weight: bold; }
+.judge-score.fail { color: #d70015; }
+.judge-score.pass { color: #248a3d; }
+
+.radio-group { display: flex; gap: 6px; margin: 8px 0; }
+.radio-group label {
+  flex: 1; padding: 6px 10px; cursor: pointer;
+  background: white; border: 1px solid #ddd; border-radius: 6px;
+  text-align: center; font-size: 12px;
+  transition: all 0.15s;
+  user-select: none;
+}
+.radio-group label:hover { background: #f0f0f0; }
+.radio-group input { display: none; }
+.radio-group label.selected-pass { background: #34c759; color: white; border-color: #34c759; }
+.radio-group label.selected-fail { background: #ff3b30; color: white; border-color: #ff3b30; }
+
+.dimension textarea {
+  width: 100%; padding: 6px 8px; font-size: 12px;
+  border: 1px solid #ddd; border-radius: 6px;
+  font-family: inherit; resize: vertical;
+  min-height: 40px;
+}
+
+footer {
+  background: white; padding: 16px 24px;
+  border-radius: 12px;
+  display: flex; gap: 12px; align-items: center;
+  position: sticky; bottom: 20px;
+  margin-top: 30px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  z-index: 10;
+}
+footer button {
+  padding: 10px 18px; border: none; border-radius: 8px;
+  cursor: pointer; font-size: 13px; font-weight: 500;
+  background: #007aff; color: white;
+}
+footer button:hover { opacity: 0.9; }
+footer button.secondary { background: #f0f0f0; color: #1d1d1f; }
+footer button.danger { background: #ff3b30; color: white; margin-left: auto; }
+
+.hint {
+  background: #eff6ff; padding: 10px 14px; border-radius: 8px;
+  font-size: 12px; color: #1e40af; margin: 10px 0;
+  border-left: 3px solid #3b82f6;
+}
+
+@media (max-width: 1100px) {
+  .three-column { grid-template-columns: 1fr; }
+  .dimensions { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📋 ResumeRewriteBench Meta-Eval</h1>
+  <div class="status">
+    <span id="caseCount">未加载</span>
+    <span id="labelCount">0 / 0</span>
+    <span id="disagreeCount" class="">0 处分歧</span>
+  </div>
+</header>
+
+<section class="data-loader">
+  <h2>第 1 步：加载 eval CSV</h2>
+  <p>在 promptfoo view 里点对应 eval 的 ⬇️ Export → CSV，然后：</p>
+  <input type="file" id="csvFile" accept=".csv">
+  <span id="loadStatus" style="margin-left: 12px; color: #666;"></span>
+  <div class="hint">
+    💡 标注会自动保存到浏览器 localStorage，关页面不丢。再次加载同一份 CSV 会回填之前的标注。
+  </div>
+</section>
+
+<section id="casesContainer"></section>
+
+<footer>
+  <button id="exportYaml">📥 Copy YAML</button>
+  <button id="exportJson" class="secondary">⬇️ Download JSON</button>
+  <button id="clearLabels" class="danger">🗑 清空所有标注</button>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+// ============================================================
+// 静态数据：原简历 + JD（来自 data/case_XX_*.txt）
+// ============================================================
+const RESUMES = {
+  '01': `张明远
+邮箱：zhangmingyuan@example.com
+电话：138-0000-0001
+
+【教育背景】
+2018.09 - 2022.06  某省立大学  计算机科学与技术  本科
+
+【工作经历】
+2022.07 - 至今  某互联网公司  前端开发工程师
+- 负责公司后台管理系统的开发与维护
+- 使用 Vue.js 和 Element UI 构建多个业务模块（订单管理、商品管理、用户运营三个模块）
+- 协助产品经理梳理需求，参与项目排期
+- 配合后端工程师完成接口联调
+- 修复线上 bug，优化页面加载速度
+
+2021.06 - 2021.09  某科技公司  前端实习生
+- 完成 3 个 H5 活动页面的开发
+- 学习并使用 React 框架完成一个内部工具
+
+【技能】
+- HTML / CSS / JavaScript
+- Vue.js, React（初级）
+- Git
+- 英语 CET-6`,
+
+  '02': `李婉清
+邮箱：liwanqing@example.com
+电话：139-0000-0002
+
+【教育背景】
+2014.09 - 2018.06  某重点大学  市场营销  本科
+2020.09 - 2022.06  某重点大学  工商管理  硕士（在职）
+
+【工作经历】
+2018.07 - 至今  某电商平台  产品经理 → 高级产品经理
+- 负责会员体系产品线，覆盖等级体系、积分系统、付费会员卡三个模块
+- 主导付费会员卡从 0 到 1 的产品设计与落地，上线 6 个月覆盖 200 万付费用户
+- 建立完整的 A/B 测试机制，全年累计跑过 30+ 实验，迭代过 4 个核心策略
+- 推动用户分层运营策略落地，会员复购率提升 18%
+- 与数据团队合作搭建会员核心看板，跟踪 LTV、留存、转化等指标
+- 跨部门协作：与设计、研发、数据、运营、客服等多团队对齐
+
+【技能】
+- 数据分析：SQL（中级）、Excel、Tableau
+- 产品工具：Axure、Figma、墨刀、Jira
+- 增长方法：A/B 测试、漏斗分析、用户分层
+- 软技能：项目管理、跨团队沟通
+- 英语 CET-6`,
+
+  '03': `王思宇
+邮箱：wangsiyu@example.com
+电话：137-0000-0003
+
+【教育背景】
+2022.09 - 2026.06  某 985 大学  统计学  本科（应届）
+GPA: 3.6/4.0，专业排名 15/120
+
+【实习经历】
+2025.07 - 2025.09  某互联网公司  数据分析实习生
+- 协助分析师完成日常报表更新（用户活跃、留存、新增）
+- 参与一个用户分群项目，用 Python pandas 完成数据清洗
+- 整理业务方需求文档，跟进数据需求排期
+
+【项目经验】
+1. 课程项目：电影评分预测（2024.10 - 2024.12）
+   - 使用 IMDB 数据集，pandas + scikit-learn 实现回归模型
+   - 模型 R² 达到 0.72
+
+2. 毕业设计：城市共享单车使用模式分析（2025.09 - 至今）
+   - 抓取北京某共享单车开放数据
+   - 使用 Python 完成时空模式可视化分析
+
+【技能】
+- Python（pandas / matplotlib / scikit-learn）
+- SQL（基础）
+- Excel
+- 英语 CET-6`
+};
+
+const JDS = {
+  '01': `职位：高级前端工程师
+公司：某 AI 初创公司
+地点：北京 / 远程
+薪资：30k-60k × 14
+
+【岗位职责】
+1. 主导前端架构设计，负责核心产品（AI 编程助手、AI 写作工具）的前端开发
+2. 推动前端工程化建设，提升团队开发效率与代码质量
+3. 与设计、后端、算法团队紧密协作，落地复杂交互场景（流式输出、富文本编辑等）
+4. 关注前端性能，建立性能监控与优化体系
+5. 参与团队技术分享与新人培养
+
+【任职要求】
+1. 计算机相关专业本科及以上，4 年以上前端开发经验
+2. 精通 React 或 Vue，对其原理有深入理解
+3. 熟悉 TypeScript，有大型 TS 项目实战经验
+4. 熟悉 Webpack、Vite 等构建工具，了解前端性能优化
+5. 有 SSR / Next.js 或 Nuxt 经验者优先
+6. 良好的英文阅读能力，能高效查阅英文技术文档
+
+【加分项】
+- 有开源项目经验
+- 参与过 AI 类产品开发
+- 对大模型应用层开发有兴趣`,
+
+  '02': `职位：AI 产品经理
+公司：某 AI 应用平台
+地点：北京
+薪资：35k-65k × 14-16
+
+【岗位职责】
+1. 主导 AI 产品（智能客服 / AI 写作 / AI 编程助手等方向）的产品规划与功能设计
+2. 深入理解大语言模型（LLM）能力边界，将技术能力转化为用户可感知的产品价值
+3. 主导 prompt 设计、模型评测体系建设，持续优化模型在产品场景下的表现
+4. 与算法、研发、设计紧密协作，推动核心功能从概念到上线全流程
+5. 建立用户反馈与数据闭环，持续迭代产品体验
+
+【任职要求】
+1. 5 年以上互联网产品经理经验，有 0 到 1 产品落地经验
+2. 至少 1 年 AI / LLM 类产品经验，深度理解 LLM 的能力与局限
+3. 熟悉 prompt engineering，能独立设计与优化 prompt
+4. 有过模型评测、benchmark 设计经验者优先
+5. 良好的技术理解力，能与算法团队高效沟通
+6. 优秀的数据分析能力，能基于数据驱动产品决策
+
+【加分项】
+- 有 RAG / Agent / 多模态产品经验
+- 关注 AI 行业动态，对前沿技术有自己的判断
+- 有技术博客或开源贡献`,
+
+  '03': `职位：数据分析师
+公司：某中型互联网公司
+地点：杭州
+薪资：12k-20k × 14（应届可投）
+
+【岗位职责】
+1. 负责业务线（电商 / 内容 / 增长）的数据分析需求，输出分析报告与策略建议
+2. 搭建并维护核心业务指标看板，支撑业务方日常决策
+3. 协助制定关键业务实验方案，参与 A/B 测试设计与结果分析
+4. 与产品、运营紧密协作，将数据洞察转化为业务行动
+
+【任职要求】
+1. 统计、计算机、数学相关专业本科及以上，应届或 1-3 年经验皆可
+2. 熟练使用 SQL，能够独立完成中等复杂度查询（含窗口函数、CTE）
+3. 熟悉至少一种数据可视化工具：Tableau / FineBI / Quicksight 等
+4. 较强的业务理解能力，能将业务问题转化为可量化的分析问题
+5. 良好的沟通能力，能用通俗的语言向非技术人员讲清楚分析结果
+
+【加分项】
+- 有过完整的业务分析报告输出经验
+- 熟悉 A/B 测试相关方法
+- 有 Python 数据处理能力`
+};
+
+const CASE_META = {
+  '01': '初级前端（2-3年）→ 高级前端（AI 创业公司）',
+  '02': '电商 PM（5 年）→ AI 产品经理',
+  '03': '应届统计学本科 → 数据分析师'
+};
+
+const DIMENSIONS = [
+  { id: '语义_诚实度', label: '语义_诚实度', desc: '伪经验/能力等级抬升（抽象总结+意向限定词应放行）' },
+  { id: '岗位_贴合度', label: '岗位_贴合度', desc: '是否真的更对口 JD（靠捏造换来的"贴合"应判 FAIL）' },
+  { id: '表达_专业度', label: '表达_专业度', desc: '格式 + 措辞是否专业' }
+];
+
+const STORAGE_PREFIX = 'rrbench-label-';
+const DATA_CACHE_KEY = 'rrbench-cached-data-v2';
+
+let loadedData = [];
+
+// ============================================================
+// CSV 解析
+// ============================================================
+document.getElementById('csvFile').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+      try {
+        loadedData = parseEvalCSV(results.data, results.meta.fields);
+        localStorage.setItem(DATA_CACHE_KEY, JSON.stringify(loadedData));
+        document.getElementById('loadStatus').innerHTML =
+          `<span style="color:#248a3d">✓ 加载了 ${loadedData.length} 条 case-provider</span>`;
+        renderCases();
+      } catch (err) {
+        console.error(err);
+        document.getElementById('loadStatus').innerHTML =
+          `<span style="color:#d70015">✗ 解析失败: ${err.message}</span>`;
+      }
+    }
+  });
+});
+
+function parseEvalCSV(rows, fields) {
+  // 找出所有 "[provider name] ..." 这种 output column
+  const providerBlocks = [];
+  fields.forEach((col, idx) => {
+    if (col.startsWith('[') && col.includes(']')) {
+      const match = col.match(/\[([^\]]+)\]/);
+      if (match) {
+        providerBlocks.push({ providerFull: match[1], outputCol: col, startIdx: idx });
+      }
+    }
+  });
+
+  const data = [];
+  rows.forEach(row => {
+    const desc = row['Description'] || '';
+    const caseIdMatch = desc.match(/Case 0?(\d+)/);
+    if (!caseIdMatch) return;
+    const caseId = caseIdMatch[1].padStart(2, '0');
+
+    providerBlocks.forEach(pb => {
+      const output = row[pb.outputCol] || '';
+      // 用 field index 拿后续列（避开重名问题）
+      const statusCol = fields[pb.startIdx + 1];
+      const scoreCol = fields[pb.startIdx + 2];
+      const namedCol = fields[pb.startIdx + 3];
+      const reasonCol = fields[pb.startIdx + 4];
+
+      const status = statusCol ? row[statusCol] : '';
+      const totalScore = scoreCol ? row[scoreCol] : '';
+      const namedScoresRaw = namedCol ? row[namedCol] : '';
+      const reason = reasonCol ? row[reasonCol] : '';
+
+      const namedScores = parseNamedScores(namedScoresRaw);
+      const providerShort = pb.providerFull.toLowerCase().includes('gpt') ? 'GPT' :
+                            pb.providerFull.toLowerCase().includes('claude') ? 'Claude' : 'Other';
+
+      data.push({
+        description: desc,
+        caseId, provider: providerShort,
+        providerFull: pb.providerFull,
+        candidateName: row['candidate_name'] || '',
+        resume: row['resume'] || '',
+        jd: row['jd'] || '',
+        output, status, totalScore,
+        namedScores, reason
+      });
+    });
+  });
+
+  return data;
+}
+
+function parseNamedScores(raw) {
+  if (!raw) return {};
+  raw = String(raw).trim();
+  // 试 JSON
+  try { return JSON.parse(raw); } catch (e) {}
+  // 试 "key=value, key=value" 或 "key: value" 格式
+  const result = {};
+  raw.split(/[,;\n]/).forEach(pair => {
+    const m = pair.match(/([^=:]+)[=:]\s*([\d.]+)/);
+    if (m) result[m[1].trim()] = parseFloat(m[2]);
+  });
+  return result;
+}
+
+// ============================================================
+// 渲染
+// ============================================================
+function renderCases() {
+  const container = document.getElementById('casesContainer');
+  container.innerHTML = '';
+
+  loadedData.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'case-card';
+    const caseDesc = CASE_META[item.caseId] || item.description || '';
+    const resumeText = item.resume || RESUMES[item.caseId] || '(未找到)';
+    const jdText = item.jd || JDS[item.caseId] || '(未找到)';
+
+    card.innerHTML = `
+      <h3>Case ${item.caseId} · ${item.provider}</h3>
+      <div class="meta">${caseDesc} · 综合判定 ${item.status} (${item.totalScore})</div>
+
+      <div class="three-column">
+        <div class="col" data-column="resume">
+          <h4>📄 原简历</h4>
+          <div class="col-link-hint">点击任意一条内容，三栏会同步联动高亮</div>
+          ${renderDocumentColumn('resume', item.caseId, resumeText)}
+        </div>
+        <div class="col" data-column="jd">
+          <h4>🎯 目标 JD</h4>
+          <div class="col-link-hint">联动会在本栏高亮最相关的 1-2 条内容</div>
+          ${renderDocumentColumn('jd', item.caseId, jdText)}
+        </div>
+        <div class="col rewrite" data-column="rewrite">
+          <h4>✏️ 改写后 <span class="rewrite-badge">高亮 = 新增/改写</span></h4>
+          <div class="col-link-hint">点击本栏也会反向联动原简历和 JD</div>
+          ${renderDocumentColumn('rewrite', item.caseId, item.output || '')}
+        </div>
+      </div>
+
+      <div class="judge-summary">
+        <strong>Judge 综合 reason：</strong>${escapeHtml(item.reason)}
+      </div>
+
+      <div class="dimensions">
+        ${DIMENSIONS.map(dim => renderDimension(item, dim)).join('')}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  attachListeners();
+  updateStatus();
+  document.getElementById('caseCount').textContent = `${loadedData.length} cases`;
+}
+
+function renderDimension(item, dim) {
+  const judgeScore = item.namedScores[dim.id];
+  const judgeDisplay = judgeScore !== undefined
+    ? `<span class="judge-score ${judgeScore >= 0.5 ? 'pass' : 'fail'}">${judgeScore}</span>`
+    : '<span style="color:#999">N/A</span>';
+
+  const key = `${item.caseId}-${item.provider}-${dim.id}`;
+  const stored = JSON.parse(localStorage.getItem(STORAGE_PREFIX + key) || '{}');
+
+  return `
+    <div class="dimension" data-key="${key}" data-judge="${judgeScore}">
+      <h4>${dim.label}</h4>
+      <div class="desc">${dim.desc}</div>
+      <div class="judge-verdict">Judge: ${judgeDisplay}</div>
+      <div class="radio-group">
+        <label class="${stored.value === 1 ? 'selected-pass' : ''}">
+          <input type="radio" name="${key}" value="1" ${stored.value === 1 ? 'checked' : ''}>
+          PASS
+        </label>
+        <label class="${stored.value === 0 ? 'selected-fail' : ''}">
+          <input type="radio" name="${key}" value="0" ${stored.value === 0 ? 'checked' : ''}>
+          FAIL
+        </label>
+      </div>
+      <textarea placeholder="你的理由（≤ 30 字）">${escapeHtml(stored.reason || '')}</textarea>
+    </div>
+  `;
+}
+
+function renderDocumentColumn(kind, caseId, text) {
+  const blocks = buildDocumentBlocks(kind, caseId, text);
+  return `
+    <div class="doc-view ${kind}" data-column="${kind}">
+      ${blocks.map(block => {
+        if (block.type === 'gap') {
+          return '<div class="doc-gap"></div>';
+        }
+        return `
+          <button
+            type="button"
+            class="doc-block ${block.className || ''}"
+            data-column="${kind}"
+            data-index="${block.index}"
+            data-block-type="${escapeAttr(block.blockType || 'content')}"
+            data-normalized="${escapeAttr(block.normalized)}"
+            data-line-normalized="${escapeAttr(block.lineNormalized || '')}"
+            data-context-normalized="${escapeAttr(block.contextNormalized || '')}"
+            data-section="${escapeAttr(block.section)}"
+            data-keywords="${escapeAttr(block.keywords.join('|'))}">
+            ${block.html}
+          </button>`;
+      }).join('')}
+    </div>`;
+}
+
+function buildDocumentBlocks(kind, caseId, text) {
+  const lines = String(text || '').split(/\r?\n/);
+  const originalLines = kind === 'rewrite' ? getOriginalLines(caseId) : [];
+  let currentSection = '';
+
+  const baseBlocks = lines.map((line, index) => {
+    if (!line.trim()) {
+      return { type: 'gap', index };
+    }
+
+    const isHeading = looksLikeSectionLine(line);
+    if (isHeading) {
+      currentSection = extractSectionLabel(line);
+    }
+
+    const rendered = kind === 'rewrite'
+      ? buildRewriteLineRender(line, originalLines)
+      : buildPlainLineRender(line);
+    const classes = [rendered.className, isHeading ? 'is-heading' : '']
+      .filter(Boolean)
+      .join(' ');
+
+    return {
+      type: 'block',
+      blockType: isHeading ? 'heading' : 'content',
+      index,
+      rawLine: line,
+      sectionLabel: currentSection,
+      html: rendered.html,
+      className: classes
+    };
+  });
+
+  return baseBlocks.map((block, index) => {
+    if (block.type !== 'block') return block;
+
+    const compareText = [block.sectionLabel, block.rawLine].filter(Boolean).join(' ');
+    const contextText = buildBlockContext(baseBlocks, index, block.sectionLabel);
+
+    return {
+      ...block,
+      normalized: normalizeForCompare(compareText),
+      lineNormalized: normalizeForCompare(block.rawLine),
+      contextNormalized: normalizeForCompare(contextText),
+      section: normalizeForCompare(block.sectionLabel),
+      keywords: extractKeywords(compareText)
+    };
+  });
+}
+
+function buildBlockContext(blocks, index, sectionLabel) {
+  const current = blocks[index];
+  if (!current || current.type !== 'block') return '';
+
+  const snippets = [sectionLabel, current.rawLine].filter(Boolean);
+  const prev = findNeighborContentBlock(blocks, index, -1, sectionLabel);
+  const next = findNeighborContentBlock(blocks, index, 1, sectionLabel);
+
+  if (prev) snippets.unshift(prev.rawLine);
+  if (next) snippets.push(next.rawLine);
+
+  return snippets.join(' ');
+}
+
+function findNeighborContentBlock(blocks, index, direction, sectionLabel) {
+  for (let pointer = index + direction; pointer >= 0 && pointer < blocks.length; pointer += direction) {
+    const block = blocks[pointer];
+    if (!block || block.type !== 'block') continue;
+    if (block.sectionLabel !== sectionLabel) break;
+    if (block.blockType === 'heading') continue;
+    return block;
+  }
+  return null;
+}
+
+function buildPlainLineRender(line) {
+  return {
+    html: escapeHtml(line),
+    className: ''
+  };
+}
+
+function getOriginalLines(caseId) {
+  return String(RESUMES[caseId] || '')
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(Boolean);
+}
+
+function buildRewriteLineRender(rewriteLine, originalLines) {
+  if (!rewriteLine) return '';
+  if (!rewriteLine.trim()) {
+    return { html: '', className: '' };
+  }
+
+  const bestMatch = findBestOriginalLine(rewriteLine, originalLines);
+  if (!bestMatch || bestMatch.score < 0.34) {
+    return {
+      html: escapeHtml(rewriteLine),
+      className: 'rewrite-added'
+    };
+  }
+
+  const highlighted = highlightAgainstOriginal(bestMatch.line, rewriteLine);
+  if (!highlighted.hasHighlights && bestMatch.score < 0.58) {
+    return {
+      html: highlighted.html,
+      className: 'rewrite-soft'
+    };
+  }
+  return {
+    html: highlighted.html,
+    className: ''
+  };
+}
+
+function looksLikeSectionLine(line) {
+  const text = String(line || '').trim();
+  return /^【.+】$/.test(text)
+    || /^#{1,3}\s+/.test(text)
+    || /^(教育背景|工作经历|实习经历|项目经验|技能清单|技能|个人简介|个人概况|岗位职责|任职要求|加分项)$/.test(text);
+}
+
+function extractSectionLabel(line) {
+  return String(line || '')
+    .replace(/^#{1,3}\s*/, '')
+    .replace(/[【】]/g, '')
+    .trim();
+}
+
+function findBestOriginalLine(rewriteLine, originalLines) {
+  const target = normalizeForCompare(rewriteLine);
+  if (!target) return null;
+
+  let best = null;
+  originalLines.forEach(originalLine => {
+    const candidate = normalizeForCompare(originalLine);
+    if (!candidate) return;
+    const score = similarityScore(candidate, target);
+    if (!best || score > best.score) {
+      best = { line: originalLine, score };
+    }
+  });
+
+  return best;
+}
+
+function normalizeForCompare(text) {
+  return String(text || '')
+    .replace(/[*#`>~_|]/g, '')
+    .replace(/[【】\[\]（）(){}<>：:，,。！？!？；;、·•\-—|/\\]/g, ' ')
+    .replace(/\s+/g, '')
+    .toLowerCase();
+}
+
+function similarityScore(a, b) {
+  if (!a || !b) return 0;
+  if (a === b) return 1;
+
+  const aBigrams = toBigrams(a);
+  const bBigrams = toBigrams(b);
+  let overlap = 0;
+  aBigrams.forEach(token => {
+    if (bBigrams.has(token)) overlap += 1;
+  });
+  const dice = (2 * overlap) / Math.max(aBigrams.size + bBigrams.size, 1);
+  const contains = (a.includes(b) || b.includes(a))
+    ? Math.min(a.length, b.length) / Math.max(a.length, b.length)
+    : 0;
+
+  return Math.max(dice, contains);
+}
+
+function toBigrams(text) {
+  const source = String(text || '');
+  if (source.length <= 1) return new Set(source ? [source] : []);
+  const result = new Set();
+  for (let i = 0; i < source.length - 1; i += 1) {
+    result.add(source.slice(i, i + 2));
+  }
+  return result;
+}
+
+function highlightAgainstOriginal(originalLine, rewriteLine) {
+  const source = Array.from(String(originalLine || ''));
+  const target = Array.from(String(rewriteLine || ''));
+  const dp = Array.from({ length: source.length + 1 }, () => Array(target.length + 1).fill(0));
+
+  for (let i = source.length - 1; i >= 0; i -= 1) {
+    for (let j = target.length - 1; j >= 0; j -= 1) {
+      dp[i][j] = source[i] === target[j]
+        ? dp[i + 1][j + 1] + 1
+        : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    }
+  }
+
+  const matched = Array(target.length).fill(false);
+  let i = 0;
+  let j = 0;
+  while (i < source.length && j < target.length) {
+    if (source[i] === target[j]) {
+      matched[j] = true;
+      i += 1;
+      j += 1;
+    } else if (dp[i + 1][j] >= dp[i][j + 1]) {
+      i += 1;
+    } else {
+      j += 1;
+    }
+  }
+
+  let html = '';
+  let buffer = '';
+  let inHighlight = false;
+  let hasHighlights = false;
+
+  const flush = () => {
+    if (!buffer) return;
+    html += inHighlight
+      ? `<span class="rewrite-highlight">${escapeHtml(buffer)}</span>`
+      : escapeHtml(buffer);
+    buffer = '';
+  };
+
+  target.forEach((char, index) => {
+    const shouldHighlight = !matched[index] && isHighlightWorthyChar(char);
+    if (shouldHighlight !== inHighlight) {
+      flush();
+      inHighlight = shouldHighlight;
+    }
+    if (shouldHighlight) hasHighlights = true;
+    buffer += char;
+  });
+  flush();
+
+  return { html, hasHighlights };
+}
+
+function isHighlightWorthyChar(char) {
+  return /[\u4e00-\u9fffA-Za-z0-9]/.test(char);
+}
+
+function attachListeners() {
+  document.querySelectorAll('.doc-block').forEach(blockEl => {
+    blockEl.addEventListener('click', () => toggleLinkedBlocks(blockEl));
+    blockEl.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        toggleLinkedBlocks(blockEl);
+      }
+    });
+  });
+
+  document.querySelectorAll('.dimension').forEach(dimEl => {
+    const key = dimEl.dataset.key;
+    const radios = dimEl.querySelectorAll('input[type="radio"]');
+    const textarea = dimEl.querySelector('textarea');
+    radios.forEach(r => r.addEventListener('change', () => saveLabel(key, dimEl)));
+    textarea.addEventListener('input', () => saveLabel(key, dimEl));
+  });
+}
+
+function saveLabel(key, dimEl) {
+  const radio = dimEl.querySelector('input[type="radio"]:checked');
+  const textarea = dimEl.querySelector('textarea');
+  const data = {
+    value: radio ? parseInt(radio.value) : null,
+    reason: textarea.value
+  };
+  localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data));
+
+  // 视觉反馈
+  dimEl.classList.toggle('labeled', data.value !== null);
+  const judgeScore = parseFloat(dimEl.dataset.judge);
+  const judgePass = !isNaN(judgeScore) && judgeScore >= 0.5 ? 1 : 0;
+  dimEl.classList.toggle('disagree', data.value !== null && data.value !== judgePass);
+
+  dimEl.querySelectorAll('.radio-group label').forEach((label, i) => {
+    label.classList.remove('selected-pass', 'selected-fail');
+    if (radio && parseInt(radio.value) === 1 && i === 0) label.classList.add('selected-pass');
+    if (radio && parseInt(radio.value) === 0 && i === 1) label.classList.add('selected-fail');
+  });
+
+  updateStatus();
+}
+
+function toggleLinkedBlocks(sourceBlock) {
+  const card = sourceBlock.closest('.case-card');
+  if (!card) return;
+
+  const activeId = `${sourceBlock.dataset.column}:${sourceBlock.dataset.index}`;
+  if (card.dataset.activeLink === activeId) {
+    clearLinkedBlocks(card);
+    return;
+  }
+
+  clearLinkedBlocks(card);
+  card.dataset.activeLink = activeId;
+
+  const allBlocks = Array.from(card.querySelectorAll('.doc-block'));
+  allBlocks.forEach(block => block.classList.add('is-faded'));
+  sourceBlock.classList.add('is-source');
+  sourceBlock.classList.remove('is-faded');
+
+  const revealTargets = [sourceBlock];
+
+  ['resume', 'jd', 'rewrite'].forEach(column => {
+    if (column === sourceBlock.dataset.column) return;
+    const candidates = allBlocks.filter(block => block.dataset.column === column);
+    const matches = findLinkedMatches(sourceBlock, candidates);
+    matches.forEach(match => {
+      match.classList.add('is-match');
+      match.classList.remove('is-faded');
+    });
+    if (matches[0]) revealTargets.push(matches[0]);
+  });
+
+  revealTargets.forEach(block => revealBlock(block));
+}
+
+function clearLinkedBlocks(card) {
+  delete card.dataset.activeLink;
+  card.querySelectorAll('.doc-block').forEach(block => {
+    block.classList.remove('is-faded', 'is-source', 'is-match');
+  });
+}
+
+function findLinkedMatches(sourceBlock, candidates) {
+  const sourceNormalized = sourceBlock.dataset.normalized || '';
+  const sourceLine = sourceBlock.dataset.lineNormalized || sourceNormalized;
+  const sourceContext = sourceBlock.dataset.contextNormalized || sourceNormalized;
+  const sourceSection = sourceBlock.dataset.section || '';
+  const sourceType = sourceBlock.dataset.blockType || 'content';
+  const sourceKeywords = (sourceBlock.dataset.keywords || '').split('|').filter(Boolean);
+
+  const candidatePool = sourceType === 'heading'
+    ? candidates
+    : candidates.filter(candidate => (candidate.dataset.blockType || 'content') !== 'heading');
+
+  const scoringPool = candidatePool.length > 0 ? candidatePool : candidates;
+
+  const ranked = scoringPool
+    .map(candidate => {
+      const candidateNormalized = candidate.dataset.normalized || '';
+      const candidateLine = candidate.dataset.lineNormalized || candidateNormalized;
+      const candidateContext = candidate.dataset.contextNormalized || candidateNormalized;
+      const candidateSection = candidate.dataset.section || '';
+      const candidateType = candidate.dataset.blockType || 'content';
+      const candidateKeywords = (candidate.dataset.keywords || '').split('|').filter(Boolean);
+      const textScore = similarityScore(sourceLine, candidateLine);
+      const keywordScore = keywordOverlapScore(sourceKeywords, candidateKeywords);
+      const contextScore = similarityScore(sourceContext, candidateContext);
+      const sectionScore = sourceSection && candidateSection
+        ? similarityScore(sourceSection, candidateSection)
+        : 0;
+
+      let score = textScore * 0.48 + keywordScore * 0.2 + contextScore * 0.24 + sectionScore * 0.08;
+      if (sourceType === candidateType) score += 0.08;
+      if (sourceType !== 'heading' && candidateType !== 'heading' && sectionScore > 0.8) score += 0.06;
+      if (candidateType === 'heading' && isGenericHeadingCandidate(candidateLine, candidateSection)) score -= 0.25;
+
+      return {
+        candidate,
+        score,
+        textScore,
+        keywordScore,
+        contextScore,
+        sectionScore
+      };
+    })
+    .sort((a, b) => b.score - a.score);
+
+  const strongMatches = ranked.filter(item => item.score >= 0.26 || item.keywordScore >= 0.5 || item.contextScore >= 0.45);
+  if (strongMatches.length > 0) {
+    return [strongMatches[0].candidate];
+  }
+
+  const fallback = ranked[0];
+  if (fallback && fallback.score >= 0.18) {
+    return [fallback.candidate];
+  }
+
+  return [];
+}
+
+function isGenericHeadingCandidate(candidateLine, candidateSection) {
+  const generic = new Set([
+    normalizeForCompare('教育背景'),
+    normalizeForCompare('工作经历'),
+    normalizeForCompare('实习经历'),
+    normalizeForCompare('项目经验'),
+    normalizeForCompare('技能'),
+    normalizeForCompare('技能清单'),
+    normalizeForCompare('个人简介'),
+    normalizeForCompare('个人概况'),
+    normalizeForCompare('岗位职责'),
+    normalizeForCompare('任职要求'),
+    normalizeForCompare('加分项')
+  ]);
+  return generic.has(candidateLine) || generic.has(candidateSection);
+}
+
+function revealBlock(block) {
+  if (!block) return;
+
+  const container = block.closest('.doc-view');
+  if (!container || typeof block.getBoundingClientRect !== 'function') return;
+
+  const containerRect = container.getBoundingClientRect();
+  const blockRect = block.getBoundingClientRect();
+  const offsetTop = blockRect.top - containerRect.top;
+  const targetTop = container.scrollTop + offsetTop - (container.clientHeight - blockRect.height) / 2;
+  const nextTop = Math.max(targetTop, 0);
+
+  if (typeof container.scrollTo === 'function') {
+    container.scrollTo({ top: nextTop, behavior: 'smooth' });
+  } else {
+    container.scrollTop = nextTop;
+  }
+}
+
+function extractKeywords(text) {
+  const source = String(text || '');
+  const result = new Set();
+
+  (source.match(/[A-Za-z][A-Za-z0-9.+#-]*/g) || []).forEach(token => {
+    result.add(token.toLowerCase());
+  });
+
+  (source.match(/[\u4e00-\u9fff]{2,}/g) || []).forEach(token => {
+    result.add(token);
+    if (token.length <= 6) {
+      for (let i = 0; i < token.length - 1; i += 1) {
+        result.add(token.slice(i, i + 2));
+      }
+    }
+  });
+
+  return Array.from(result);
+}
+
+function keywordOverlapScore(sourceKeywords, targetKeywords) {
+  const sourceSet = new Set(sourceKeywords || []);
+  const targetSet = new Set(targetKeywords || []);
+  if (sourceSet.size === 0 || targetSet.size === 0) return 0;
+
+  let overlap = 0;
+  sourceSet.forEach(token => {
+    if (targetSet.has(token)) overlap += 1;
+  });
+
+  return overlap / Math.max(Math.min(sourceSet.size, targetSet.size), 1);
+}
+
+function updateStatus() {
+  const total = loadedData.length * DIMENSIONS.length;
+  let labeled = 0, disagree = 0;
+  loadedData.forEach(item => {
+    DIMENSIONS.forEach(dim => {
+      const key = `${item.caseId}-${item.provider}-${dim.id}`;
+      const stored = JSON.parse(localStorage.getItem(STORAGE_PREFIX + key) || '{}');
+      if (stored.value !== null && stored.value !== undefined) {
+        labeled++;
+        const judgeScore = item.namedScores[dim.id];
+        if (judgeScore !== undefined) {
+          const judgePass = judgeScore >= 0.5 ? 1 : 0;
+          if (stored.value !== judgePass) disagree++;
+        }
+      }
+    });
+  });
+  const labelEl = document.getElementById('labelCount');
+  labelEl.textContent = `${labeled} / ${total}`;
+  labelEl.classList.toggle('done', labeled === total && total > 0);
+  document.getElementById('disagreeCount').textContent = `${disagree} 处分歧`;
+}
+
+// ============================================================
+// 导出
+// ============================================================
+document.getElementById('exportYaml').addEventListener('click', () => {
+  const yaml = generateYaml();
+  navigator.clipboard.writeText(yaml).then(() => {
+    alert('已复制 YAML 到剪贴板，粘贴到 meta_eval/human_labels.yaml 或直接发回 Claude。');
+  }).catch(() => {
+    const w = window.open('');
+    w.document.body.innerHTML = `<pre style="padding:20px">${escapeHtml(yaml)}</pre>`;
+  });
+});
+
+function generateYaml() {
+  let yaml = `# Auto-generated from labeling_app.html\n`;
+  yaml += `# 标注日期：${new Date().toISOString().split('T')[0]}\n\n`;
+  yaml += `cases:\n`;
+  loadedData.forEach(item => {
+    const id = `${item.caseId}-${item.provider}`;
+    yaml += `\n  - case_id: "${id}"\n`;
+    yaml += `    case_desc: "${(CASE_META[item.caseId]||'').replace(/"/g,'\\"')} / ${item.provider}"\n`;
+    yaml += `    judge_named_scores: ${JSON.stringify(item.namedScores)}\n`;
+    yaml += `    labels:\n`;
+    DIMENSIONS.forEach(dim => {
+      const key = `${item.caseId}-${item.provider}-${dim.id}`;
+      const stored = JSON.parse(localStorage.getItem(STORAGE_PREFIX + key) || '{}');
+      const v = stored.value !== null && stored.value !== undefined ? stored.value : '?';
+      const r = (stored.reason || '').replace(/"/g, '\\"');
+      yaml += `      ${dim.id}:\n`;
+      yaml += `        value: ${v}\n`;
+      yaml += `        reason: "${r}"\n`;
+    });
+  });
+  return yaml;
+}
+
+document.getElementById('exportJson').addEventListener('click', () => {
+  const data = { cases: [] };
+  loadedData.forEach(item => {
+    const id = `${item.caseId}-${item.provider}`;
+    const caseData = {
+      case_id: id,
+      case_desc: `${CASE_META[item.caseId]} / ${item.provider}`,
+      judge_named_scores: item.namedScores,
+      labels: {}
+    };
+    DIMENSIONS.forEach(dim => {
+      const key = `${item.caseId}-${item.provider}-${dim.id}`;
+      const stored = JSON.parse(localStorage.getItem(STORAGE_PREFIX + key) || '{}');
+      caseData.labels[dim.id] = stored;
+    });
+    data.cases.push(caseData);
+  });
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `human_labels_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+});
+
+document.getElementById('clearLabels').addEventListener('click', () => {
+  if (!confirm('真的清空所有标注？这个操作不可恢复。')) return;
+  Object.keys(localStorage).filter(k => k.startsWith(STORAGE_PREFIX)).forEach(k => localStorage.removeItem(k));
+  renderCases();
+});
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function escapeAttr(s) {
+  return escapeHtml(String(s || '')).replace(/`/g, '&#96;');
+}
+
+// ============================================================
+// 启动：尝试从 localStorage 恢复上次加载的数据
+// ============================================================
+(function init() {
+  const cached = localStorage.getItem(DATA_CACHE_KEY);
+  if (cached) {
+    try {
+      loadedData = JSON.parse(cached);
+      document.getElementById('loadStatus').innerHTML =
+        `<span style="color:#666">已恢复上次加载的 ${loadedData.length} 条数据。要换数据请重新选 CSV。</span>`;
+      renderCases();
+    } catch (e) {}
+  }
+})();
+</script>
+</body>
+</html>

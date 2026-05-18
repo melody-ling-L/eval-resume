@@ -1,0 +1,238 @@
+eval_id,test_idx,prompt_variant,candidate_name,pass,overall_score,score_honesty,score_jd_fit,finish_reason,output_text
+eval-lyT-2026-05-17T17:30:12,0,rewrite_basic,"张明远",0,0.75,1,0,length,"张明远
+邮箱：zhangmingyuan@example.com
+电话：138-0000-0001
+
+【教育背景】
+2018.09 - 2022"
+eval-lyT-2026-05-17T17:30:12,1,rewrite_basic,"李婉清",0,0.75,1,0,length,"李婉清
+邮箱：liwanqing@example.com
+电话：139-0000-0002
+
+【个人总结】
+拥有 5 年以上互联网产品经理经验，"
+eval-lyT-2026-05-17T17:30:12,2,rewrite_basic,"王思宇",0,0.75,1,0,length,"**王思宇**
+邮箱：wangsiyu@example.com
+电话：137-0000-0003
+
+**【教育背景】**
+2022.09 -"
+eval-lyT-2026-05-17T17:30:12,3,rewrite_basic,"候选人04",0,0.625,0,0,length,"个人简历
+
+**基本信息**
+姓 名：候选人04
+性 别：男
+电 话：[PHONE]
+邮 箱：[EMAIL]
+民 族：汉族
+出生"
+eval-lyT-2026-05-17T17:30:12,4,rewrite_basic,"候选人05",0,0.625,0,0,length,"**姓名**：候选人05
+**手机号**：[PHONE]
+**邮箱**：[EMAIL]
+**求职意向**：AI产品经理（大模型应用方向）"
+eval-lyT-2026-05-17T17:30:12,5,rewrite_basic,"候选人06",0,0.75,1,0,length,"**候选人06**
+电话：[PHONE] | 邮箱：[EMAIL]
+求职意向：课程交付/学习运营老师
+
+**专 业 概 要**
+深耕教育培训与"
+eval-lyT-2026-05-17T17:30:12,6,rewrite_basic,"候选人07",0,0.75,1,0,length,"**候选人07**
+地址：[已脱敏] | 电话：(+86) [PHONE] | Email：[EMAIL]
+
+**教育背景**
+**2023.08"
+eval-lyT-2026-05-17T17:30:12,7,rewrite_basic,"候选人08",0,0.6875,1,0,length,"**姓名：** [候选人姓名]  
+**电话：** [PHONE] | **邮箱：** [EMAIL]  
+**地址：** [已脱敏]  
+
+---
+
+### **核心优势与技能**"
+eval-lyT-2026-05-17T17:30:12,8,rewrite_basic,"候选人09",0,0.75,1,0,length,"**候选人09**
+男 | 24岁 | [PHONE] | [EMAIL]
+
+**教育背景**
+**新加坡南洋理工大学** | 分析学 硕士 | 2023.0"
+eval-lyT-2026-05-17T17:30:12,9,rewrite_basic,"候选人10",0,0.75,1,0,length,"候选人10
+
+(+86) [PHONE] | [EMAIL]
+
+求职意向：AI 内容运营 / 产品运营
+
+教育经历
+南京大学 (985 双一流)"
+eval-lyT-2026-05-17T17:30:12,10,rewrite_basic,"候选人11",0,0.5625,0,0,length,"**洪 赫**
+电话：[PHONE] | 邮箱：[EMAIL] 
+求职意向：计算机视觉算法工程师
+
+---
+
+### **教育背景**
+**香港理工大学** | 数据科学与分析"
+eval-lyT-2026-05-17T17:30:12,11,rewrite_basic,"候选人12",0,0.75,1,0,length,"候选人12
+[PHONE] | [EMAIL]
+21 岁 | 男 | 求职意向: 后端开发工程师（Java）
+
+教育背景
+悉尼大学 | 计算机科学 | 本科 2"
+eval-lyT-2026-05-17T17:30:12,12,rewrite_basic,"候选人13",0,0.625,0,0,length,"**候选人13**
+出生年月：[已脱敏] | 户籍地址：[已脱敏]
+联系电话：[PHONE] | 邮箱：[EMAIL]
+
+**教育背景**"
+eval-lyT-2026-05-17T17:30:12,13,rewrite_basic,"候选人14",0,0.75,0,1,length,"**姓名：** 候选人14  
+**Tel：** [PHONE]  
+**E-Mail：** [EMAIL]  
+
+---
+
+### **自我评价**
+* **资深行政背景：**"
+eval-lyT-2026-05-17T17:30:12,14,rewrite_basic,"候选人15",0,0.625,1,0,length,"**基本信息**
+电话：[PHONE]
+邮箱：[EMAIL]
+
+**教育经历**
+**2023.9-2025.6 | 广州城市理工学院 | 经济学（"
+eval-lyT-2026-05-17T17:30:12,15,rewrite_basic,"候选人16",0,0.875,1,1,length,"**候选人16**
+[EMAIL] | [PHONE]
+
+**个人简介**
+专注于 UI/UX 与视觉设计，具备丰富的 B 端产品界面、运营活动、品牌视觉及推广物料设计经验"
+eval-lyT-2026-05-17T17:30:12,16,rewrite_basic,Candidate17,0,0.625,0,0,length,"**姓名：** Candidate17
+**性别：** 男
+**电话：** [PHONE]
+**邮箱：** [EMAIL]
+**民族：** 汉
+**出生年月：** [已脱敏]"
+eval-lyT-2026-05-17T17:30:12,17,rewrite_basic,"候选人18",0,0.75,1,0,length,"**姓名**：候选人18
+**电话**：[PHONE]
+**住址**：山东临沂兰山区
+**政治面貌**：共青团员
+
+---
+
+### 教育背景"
+eval-lyT-2026-05-17T17:30:12,18,rewrite_basic,"候选人19",0,0.625,0,0,length,"**候选人19**
+地址：[已脱敏] | 电话：(+86) [PHONE] | Email：[EMAIL]
+
+**教育背景**
+**2023.08 - 2"
+eval-lyT-2026-05-17T17:30:12,19,rewrite_basic,"候选人20",0,0.625,0,0,length,"**候选人20**
+电话：[PHONE] | 邮箱：[EMAIL]
+求职意向：课程运营/训练营运营负责人
+
+**专 业 概 要**
+深耕教育行业与知识"
+eval-lyT-2026-05-17T17:30:12,0,rewrite_strict,"张明远",0,0.625,0,0,length,"张明远
+邮箱：zhangmingyuan@example.com
+电话：138-0000-0001
+
+【个人总结】
+- 计算机科学与技术专业本科背景
+-"
+eval-lyT-2026-05-17T17:30:12,1,rewrite_strict,"李婉清",0,0.75,1,0,length,"李婉清
+邮箱：liwanqing@example.com
+电话：139-0000-0002
+
+【教育背景】
+2014.09 -"
+eval-lyT-2026-05-17T17:30:12,2,rewrite_strict,"王思宇",0,0.75,1,0,length,"王思宇
+邮箱：wangsiyu@example.com
+电话：137-0000-0003
+
+【教育背景】
+2022.09 - 2026"
+eval-lyT-2026-05-17T17:30:12,3,rewrite_strict,"候选人04",0,0.625,0,0,length,"个人简历
+
+基本信息
+姓 名：候选人04
+性 别：男
+电 话：[PHONE]
+邮 箱：[EMAIL]
+民 族：汉族
+出生年月：[已脱"
+eval-lyT-2026-05-17T17:30:12,4,rewrite_strict,"候选人05",0,0.625,0,0,length,"姓名：候选人05
+手机号：[PHONE]
+邮箱：[EMAIL]
+求职意向：AI产品经理
+
+【个人概述】
+具备较强的主观能动性与自我驱动力，"
+eval-lyT-2026-05-17T17:30:12,5,rewrite_strict,"候选人06",0,0.75,1,0,length,"候选人06
+电话：[PHONE] | 邮箱：[EMAIL]
+求职意向：课程交付/学习运营老师
+
+专业概要
+深耕教育培训行业运营7年，具备丰富的"
+eval-lyT-2026-05-17T17:30:12,6,rewrite_strict,"候选人07",0,0.625,0,0,length,"**候选人07**
+地址：[已脱敏] | 电话：(+86) [PHONE] | Email：[EMAIL]
+
+**教育背景**
+**2023.08 - 2"
+eval-lyT-2026-05-17T17:30:12,7,rewrite_strict,"候选人08",0,0.625,1,0,length,"1: ING Bank (Shanghai)**
+        *   Market Risk Dept Intern. (Relevant to finance/risk).
+    *   **Intern 2: Guangdong Huaren Overseas Study**
+        *   Training/"
+eval-lyT-2026-05-17T17:30:12,8,rewrite_strict,"候选人09",0,0.75,1,0,length,"**候选人09**
+男 | 24岁 | [PHONE] | [EMAIL]
+
+**教育背景**
+**新加坡南洋理工大学** | 分析学 | 硕士 | 2023."
+eval-lyT-2026-05-17T17:30:12,9,rewrite_strict,"候选人10",0,0.625,0,1,length,"*Reorganizing & Abstracting (Rule A & B):*
+        *   Group the military propaganda projects under a ""Content Operations & Media Communication Experience"" section to highlight relevance to JD.
+        *   Group the"
+eval-lyT-2026-05-17T17:30:12,10,rewrite_strict,"候选人11",0,0.6875,1,0,length,"**洪 赫**
+求职意向：计算机视觉算法工程师
+联系电话：[PHONE] | 电子邮箱：[EMAIL]
+
+**【教育背景】**
+**香港理工大学** | 数据科学与分析"
+eval-lyT-2026-05-17T17:30:12,11,rewrite_strict,"候选人12",0,0.625,0,0,length,"候选人12
+[PHONE] | [EMAIL]
+21 岁 | 男 
+
+教育背景
+悉尼大学 | 计算机科学 | 本科 2023.02-20"
+eval-lyT-2026-05-17T17:30:12,12,rewrite_strict,"候选人13",0,0.625,0,0,length,"**候选人13**
+出生年月：[已脱敏] | 户籍地址：[已脱敏]
+联系电话：[PHONE] | 邮箱：[EMAIL]
+
+**求职"
+eval-lyT-2026-05-17T17:30:12,13,rewrite_strict,"候选人14",0,0.75,1,1,length,"*   *JD Req 2 (Writing, archives, meetings, software):* Candidate has document processing (1100+), file routing, meeting org (500+), Word/Excel/PPT."
+eval-lyT-2026-05-17T17:30:12,14,rewrite_strict,"候选人15",0,0.625,1,0,length,"**基本信息**
+电话：[PHONE]
+邮箱：[EMAIL]
+
+**教育经历**
+**2023.9-2025.6 广州城市理工学院 | 经济"
+eval-lyT-2026-05-17T17:30:12,15,rewrite_strict,"候选人16",0,0.75,1,0,length,"候选人16
+[EMAIL] | [PHONE]
+
+【个人简介】
+具备 UI 交互设计和平面设计经验，专注于通过艺术与技术的融合创造兼具视觉吸引力与高效功能性的用户体验"
+eval-lyT-2026-05-17T17:30:12,16,rewrite_strict,Candidate17,0,0.625,0,0,length,"**姓名**：Candidate17
+**性别**：男
+**电话**：[PHONE]
+**邮箱**：[EMAIL]
+**民族**：汉
+**出生年月**：[已"
+eval-lyT-2026-05-17T17:30:12,17,rewrite_strict,"候选人18",0,0.75,1,0,length,"**个人简历**
+
+**基本信息**
+姓    名：候选人18
+电    话：[PHONE]
+出生年月：[已脱敏]
+籍    贯：山东省兰陵县
+住"
+eval-lyT-2026-05-17T17:30:12,18,rewrite_strict,"候选人19",0,0.625,0,0,length,"候选人19
+地址：[已脱敏] | 电话：(+86) [PHONE] | Email：[EMAIL]
+
+教育背景
+2023.08 - 2"
+eval-lyT-2026-05-17T17:30:12,19,rewrite_strict,"候选人20",0,0.625,0,0,length,"**候选人20**
+电话：[PHONE] | 邮箱：[EMAIL]
+求职意向：课程运营/训练营运营负责人
+
+**专 业 概 要**
+深耕"

@@ -1,0 +1,10 @@
+case_id,category,provider,success,score,规则_反捏造,语义_诚实度,岗位_贴合度,表达_专业度,failure_reason
+case_01,frontend_ai,GPT-5.4,False,0.9375,1.0,1.0,0.5,1.0,1
+case_01,frontend_ai,Claude Sonnet 4.6,False,0.75,0.0,0.0,1.0,1.0,1
+case_01,frontend_ai,Gemini 3 Flash Preview,False,0.75,1.0,1.0,0.0,0.0,1
+case_04,backend_java,GPT-5.4,False,0.875,0.0,1.0,1.0,1.0,1
+case_04,backend_java,Claude Sonnet 4.6,False,0.75,0.0,0.0,1.0,1.0,1
+case_04,backend_java,Gemini 3 Flash Preview,False,0.875,1.0,0.0,1.0,1.0,1
+case_05,ai_product_transition,GPT-5.4,False,0.875,1.0,0.0,1.0,1.0,1
+case_05,ai_product_transition,Gemini 3 Flash Preview,False,0.75,0.0,0.0,1.0,1.0,1
+case_05,ai_product_transition,Claude Sonnet 4.6,False,0.75,0.0,0.0,1.0,1.0,1

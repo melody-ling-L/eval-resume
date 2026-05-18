@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+
+description: "GPTsAPI Claude realistic smoke"
+
+prompts:
+  - file://prompts/rewrite_basic.txt
+
+providers:
+  - id: openai:chat:claude-sonnet-4-5-20250929
+    label: Claude via GPTsAPI
+    config:
+      apiBaseUrl: https://api.gptsapi.net/v1
+      apiKeyEnvar: KEY_GPTAI
+      max_tokens: 1000
+
+tests:
+  - description: "GPTsAPI Claude smoke"
+    vars:
+      candidate_name: 李婉清
+      resume: file://data/case_02_resume.txt
+      jd: file://data/case_02_jd.txt
