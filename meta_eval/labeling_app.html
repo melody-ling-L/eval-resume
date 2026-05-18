@@ -531,8 +531,10 @@ function parseEvalCSV(rows, fields) {
       const reason = reasonCol ? row[reasonCol] : '';
 
       const namedScores = parseNamedScores(namedScoresRaw);
-      const providerShort = pb.providerFull.toLowerCase().includes('gpt') ? 'GPT' :
-                            pb.providerFull.toLowerCase().includes('claude') ? 'Claude' : 'Other';
+      const providerLower = pb.providerFull.toLowerCase();
+      const providerShort = providerLower.includes('gpt') ? 'GPT' :
+                providerLower.includes('claude') ? 'Claude' :
+                providerLower.includes('gemini') ? 'Gemini' : pb.providerFull;
 
       data.push({
         description: desc,
