@@ -1,0 +1,5 @@
+reports/** linguist-generated=true
+data/** linguist-vendored=true
+archive/** linguist-generated=true
+*.csv linguist-detectable=false
+*.txt linguist-detectable=false

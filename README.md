@@ -7,6 +7,9 @@
 
 **当 LLM 帮你改简历，它会不会偷偷加你没做过的项目？这是第一个系统测过这个问题的中文 benchmark。**
 
+> 🔗 **Companion tool**: 本项目的 meta-eval 标注用 [JudgeBuddy](https://github.com/melody-ling-L/judgebuddy) ——
+> 一个零部署的单文件 HTML 工具，专为 LLM-as-judge 校准设计。
+
 `eval-resume` 是一个面向"简历改写是否诚实"的小型 benchmark。
 
 它不问“哪个模型写得更漂亮”，而是问一个更实际的问题：
@@ -321,10 +324,14 @@ eval-resume/
     step8_summary.md
     evals/
     exports/
+  archive/
+    dev_artifacts/
   promptfooconfig.yaml
   promptfooconfig.api2d_2model.yaml
   promptfooconfig.gptsapi_api2d_judge.yaml
 ```
+
+历史调试快照和一次性排障产物归档在 `archive/dev_artifacts/`，这样仓库根目录只保留当前 bench 的核心输入、配置和报告。
 
 ## Quick Start (1 minute taste)
 
