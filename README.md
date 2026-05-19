@@ -491,7 +491,7 @@ python3 -m http.server 8000
 
 ## License
 
-代码部分使用 MIT License。数据部分使用 CC BY-NC 4.0。详见 [LICENSE](LICENSE) 文件。
+代码部分使用 MIT License，详见 [LICENSE](LICENSE)。数据部分使用 CC BY-NC 4.0，详见 [LICENSE-DATA.md](LICENSE-DATA.md)。
 
 数据集部分：脱敏简历仅用于研究用途，不用于商业。引用本数据集时请保留 anonymization 状态。
 

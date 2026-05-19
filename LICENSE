@@ -19,13 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-DATA LICENSE (separate from code):
-
-The anonymized resume dataset in `data/resumes_anon/` is shared under
-CC BY-NC 4.0 (Creative Commons Attribution-NonCommercial 4.0 International).
-You may use it for research purposes with attribution. Commercial use is
-prohibited. You must preserve the anonymization state and not attempt to
-re-identify candidates.
