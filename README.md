@@ -412,6 +412,43 @@ promptfoo view
 promptfoo export eval <eval-id> -o reports/exports/<name>.json
 ```
 
+### 8. Add a human-label stage
+
+如果你想把“LLM judge 评分”再用人工金标校一遍，不要把人工标注塞进 `promptfooconfig.yaml` 里；
+更干净的做法是把它作为 eval 之后的 meta-eval 阶段。
+
+推荐流程：
+
+1. 在 `promptfoo view` 里打开目标 eval，然后导出 **CSV**
+2. 打开 `meta_eval/labeling_app.html`
+3. 加载刚导出的 CSV，逐条标 `语义_诚实度` / `岗位_贴合度` / `表达_专业度`
+4. `规则_反捏造` 这一维继续保留自动规则判定，不需要人工重复标
+5. 点页面底部 `Copy YAML`，把结果粘贴回 `meta_eval/human_labels.yaml`
+
+本地打开方式示例：
+
+```bash
+cd eval-resume
+python3 -m http.server 8000
+```
+
+然后浏览器访问：`http://localhost:8000/meta_eval/labeling_app.html`
+
+这套标注器已经支持直接读取 promptfoo 导出的 CSV，并会：
+
+- 自动展示原简历 / JD / 改写后简历三栏联动
+- 自动显示 judge 的分维度分数
+- 自动高亮你和 judge 的分歧
+- 自动把标注缓存到浏览器 localStorage
+
+建议不要一开始就全量人工标 120 条。更实用的做法是先标：
+
+- headline case
+- judge 分数最不稳定的 case
+- 你主观上最容易“误奖贴合度”的 case
+
+这样可以先快速得到一版 human-vs-judge disagreement，再决定是否扩到全量标注。
+
 ## Result artifacts
 
 当前项目里几个重要结果文件分别代表：
