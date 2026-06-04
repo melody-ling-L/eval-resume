@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RR-Bench Eval — eval-SHm-2026-06-04T04:14:13</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #fff; --text: #1a1a2e; --muted: #666;
+    --pass: #0d7a49; --pass-bg: #e8f5ee; --fail: #c0392b; --fail-bg: #fdecea;
+    --error: #b45309; --error-bg: #fef3c7; --border: #e2e8f0; --accent: #3b5998;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--text); line-height: 1.5; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 1.5rem; margin: 0 0 8px; }
+  .hero { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .hero p { margin: 4px 0; color: var(--muted); font-size: 0.9rem; }
+  .stats { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
+  .stat { background: var(--bg); border-radius: 8px; padding: 12px 20px; min-width: 120px; }
+  .stat span { color: var(--muted); font-size: 0.8rem; }
+  .stat strong { display: block; font-size: 1.8rem; }
+  .stat.pass strong { color: var(--pass); }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 32px; font-size: 0.85rem; }
+  th, td { padding: 10px 12px; text-align: center; border-bottom: 1px solid var(--border); }
+  th { background: #f1f5f9; font-weight: 600; }
+  th:first-child, td:first-child { text-align: left; }
+  th:nth-child(2), td:nth-child(2) { text-align: left; }
+  tr { cursor: pointer; }
+  tr:hover { background: #f8fafc; }
+  td.pass { color: var(--pass); font-weight: bold; }
+  td.fail { color: var(--fail); font-weight: bold; }
+  td.na { color: #aaa; }
+  tr.pass td:nth-child(3) { color: var(--pass); }
+  tr.fail td:nth-child(3) { color: var(--fail); }
+  tr.error td:nth-child(3) { color: var(--error); }
+  .case { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+  .case-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; user-select: none; }
+  .case-header h2 { margin: 0; font-size: 1rem; flex: 1; }
+  .case-header .sub { font-weight: normal; color: var(--muted); font-size: 0.85rem; }
+  .toggle { color: var(--muted); transition: transform .2s; }
+  .case.open .toggle { transform: rotate(180deg); }
+  .case-body { display: none; padding: 0 18px 18px; border-top: 1px solid var(--border); }
+  .case.open .case-body { display: block; }
+  .badge { font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+  .badge.pass { background: var(--pass-bg); color: var(--pass); }
+  .badge.fail { background: var(--fail-bg); color: var(--fail); }
+  .badge.error { background: var(--error-bg); color: var(--error); }
+  .dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 12px 0; }
+  .dim { font-size: 0.82rem; padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+  .dim.pass { background: var(--pass-bg); }
+  .dim.fail { background: var(--fail-bg); }
+  .dim.na { background: #f8f8f8; color: #999; }
+  .reason { margin-top: 6px; color: var(--muted); font-size: 0.78rem; word-break: break-word; }
+  .output { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; white-space: pre-wrap; word-break: break-word; font-size: 0.82rem; line-height: 1.6; max-height: 600px; overflow: auto; }
+  .err { color: var(--fail); background: var(--fail-bg); padding: 10px; border-radius: 6px; font-size: 0.85rem; word-break: break-word; }
+  .empty { color: var(--muted); font-style: italic; }
+  .meta { color: var(--muted); font-size: 0.85rem; }
+  a { color: var(--accent); }
+  footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 32px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>Resume Rewrite Bench — Eval Report</h1>
+    <p><strong>Eval ID:</strong> eval-SHm-2026-06-04T04:14:13</p>
+    <p><strong>Description:</strong> Dify-only 简版评测（绕开 per-provider prompts 配置）</p>
+    <p><strong>Provider:</strong> OfferPie Dify 两阶段架构</p>
+    <p><strong>Exported:</strong> 2026-06-04T06:21:29.563Z</p>
+    <div class="stats">
+      <div class="stat"><span>Total</span><strong>20</strong></div>
+      <div class="stat pass"><span>PASS (all dims)</span><strong>12</strong></div>
+      <div class="stat"><span>FAIL / ERROR</span><strong>8</strong></div>
+      <div class="stat"><span>Pass Rate</span><strong>60%</strong></div>
+    </div>
+  </div>
+  <h2 style="font-size:1.1rem;margin-bottom:12px;">Score Matrix</h2>
+  <table>
+    <thead><tr><th>Case</th><th>Description</th><th>Overall</th><th>规则_反捏造</th><th>语义_诚实度</th><th>岗位_贴合度</th><th>表达_专业度</th></tr></thead>
+    <tbody><tr class="fail" onclick="document.getElementById('case_01').scrollIntoView({behavior:'smooth'});document.getElementById('case_01').classList.add('open')">
+    <td><a href="#case_01">case_01</a></td>
+    <td>张明远</td>
+    <td class="fail">FAIL</td><td class="pass">✓</td><td class="fail">✗</td><td class="fail">✗</td><td class="fail">✗</td>
+  </tr>
+<tr class="fail" onclick="document.getElementById('case_02').scrollIntoView({behavior:'smooth'});document.getElementById('case_02').classList.add('open')">
+    <td><a href="#case_02">case_02</a></td>
+    <td>李婉清</td>
+    <td class="fail">FAIL</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="fail">✗</td>
+  </tr>
+<tr class="fail" onclick="document.getElementById('case_03').scrollIntoView({behavior:'smooth'});document.getElementById('case_03').classList.add('open')">
+    <td><a href="#case_03">case_03</a></td>
+    <td>王思宇</td>
+    <td class="fail">FAIL</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="fail">✗</td>
+  </tr>
+<tr class="fail" onclick="document.getElementById('case_04').scrollIntoView({behavior:'smooth'});document.getElementById('case_04').classList.add('open')">
+    <td><a href="#case_04">case_04</a></td>
+    <td>候选人04</td>
+    <td class="fail">FAIL</td><td class="fail">✗</td><td class="pass">✓</td><td class="pass">✓</td><td class="fail">✗</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_05').scrollIntoView({behavior:'smooth'});document.getElementById('case_05').classList.add('open')">
+    <td><a href="#case_05">case_05</a></td>
+    <td>候选人05</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_06').scrollIntoView({behavior:'smooth'});document.getElementById('case_06').classList.add('open')">
+    <td><a href="#case_06">case_06</a></td>
+    <td>候选人06</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_07').scrollIntoView({behavior:'smooth'});document.getElementById('case_07').classList.add('open')">
+    <td><a href="#case_07">case_07</a></td>
+    <td>候选人07</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="fail" onclick="document.getElementById('case_08').scrollIntoView({behavior:'smooth'});document.getElementById('case_08').classList.add('open')">
+    <td><a href="#case_08">case_08</a></td>
+    <td>候选人08</td>
+    <td class="fail">FAIL</td><td class="fail">✗</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_09').scrollIntoView({behavior:'smooth'});document.getElementById('case_09').classList.add('open')">
+    <td><a href="#case_09">case_09</a></td>
+    <td>候选人09</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_10').scrollIntoView({behavior:'smooth'});document.getElementById('case_10').classList.add('open')">
+    <td><a href="#case_10">case_10</a></td>
+    <td>候选人10</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="error" onclick="document.getElementById('case_11').scrollIntoView({behavior:'smooth'});document.getElementById('case_11').classList.add('open')">
+    <td><a href="#case_11">case_11</a></td>
+    <td>候选人11</td>
+    <td class="error">ERROR</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td>
+  </tr>
+<tr class="fail" onclick="document.getElementById('case_12').scrollIntoView({behavior:'smooth'});document.getElementById('case_12').classList.add('open')">
+    <td><a href="#case_12">case_12</a></td>
+    <td>候选人12</td>
+    <td class="fail">FAIL</td><td class="fail">✗</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_13').scrollIntoView({behavior:'smooth'});document.getElementById('case_13').classList.add('open')">
+    <td><a href="#case_13">case_13</a></td>
+    <td>候选人13</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_14').scrollIntoView({behavior:'smooth'});document.getElementById('case_14').classList.add('open')">
+    <td><a href="#case_14">case_14</a></td>
+    <td>候选人14</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_15').scrollIntoView({behavior:'smooth'});document.getElementById('case_15').classList.add('open')">
+    <td><a href="#case_15">case_15</a></td>
+    <td>候选人15</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_16').scrollIntoView({behavior:'smooth'});document.getElementById('case_16').classList.add('open')">
+    <td><a href="#case_16">case_16</a></td>
+    <td>候选人16</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_17').scrollIntoView({behavior:'smooth'});document.getElementById('case_17').classList.add('open')">
+    <td><a href="#case_17">case_17</a></td>
+    <td>Candidate17</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="fail" onclick="document.getElementById('case_18').scrollIntoView({behavior:'smooth'});document.getElementById('case_18').classList.add('open')">
+    <td><a href="#case_18">case_18</a></td>
+    <td>候选人18</td>
+    <td class="fail">FAIL</td><td class="pass">✓</td><td class="fail">✗</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_19').scrollIntoView({behavior:'smooth'});document.getElementById('case_19').classList.add('open')">
+    <td><a href="#case_19">case_19</a></td>
+    <td>候选人19</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr>
+<tr class="pass" onclick="document.getElementById('case_20').scrollIntoView({behavior:'smooth'});document.getElementById('case_20').classList.add('open')">
+    <td><a href="#case_20">case_20</a></td>
+    <td>候选人20</td>
+    <td class="pass">PASS</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td><td class="pass">✓</td>
+  </tr></tbody>
+  </table>
+  <h2 style="font-size:1.1rem;margin-bottom:12px;">Case Details</h2>
+  
+    <section class="case" id="case_01">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge fail">FAIL</span>
+        <h2>case_01 <span class="sub">张明远</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: frontend_ai</p>
+        <p class="err">简历存在残留未渲染标记，如【】，命中硬伤清单。</p>
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写</div></div><div class="dim fail"><strong>语义_诚实度</strong>: FAIL<div class="reason">改写后简历中‘独立完成 3 个 H5 活动页面的开发’，原简历未体现‘独立完成’，属于原简历无对应实操依据的硬词表述，判定 FAIL。</div></div><div class="dim fail"><strong>岗位_贴合度</strong>: FAIL<div class="reason">前置检查 A：2022.07 - 2026.06 = 3.9 年 ≥ JD 要求 4 - 0.5 = 3.5 年 → 满足；前置检查 B：未触发，改写后简历无合规意向语。改写后简历未体现精通框架原理、TS 项目经验等核心要求，判 FAIL。</div></div><div class="dim fail"><strong>表达_专业度</strong>: FAIL<div class="reason">简历存在残留未渲染标记，如【】，命中硬伤清单。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">张明远
+邮箱：zhangmingyuan@example.com  电话：138-0000-0001
+
+【教育背景】
+】
+2018.09 - 2022.06  某省立大学  计算机科学与技术  本科
+【
+
+【工作经历 ⭐】
+2022.07 - 至今  某互联网公司  前端开发工程师
+- 负责后台管理系统核心模块（订单管理、商品管理、用户运营）的前端开发与维护，基于 Vue.js + Element UI 实现复杂业务逻辑与交互
+- 参与需求评审与项目排期，与后端团队紧密协作完成接口联调，保障项目按时交付
+- 持续修复线上缺陷，针对页面加载速度进行优化（如懒加载、缓存策略），积累前端性能优化实践经验
+- 在开发中注重组件复用与代码规范，关注前端工程化建设，提升开发效率与代码可维护性
+
+【工作经历】
+（原文内容为空，无法进行改写。根据规则，无事实依据不得添加任何内容。）
+
+【实习经历（简）】
+2021.06 - 2021.09  某科技公司  前端实习生  
+- 使用 React 框架完成一个内部工具的开发，积累组件化开发经验  
+- 独立完成 3 个 H5 活动页面的开发，涉及 HTML/CSS/JavaScript 及响应式布局  
+- 具备 Git 版本控制及英语 CET-6 技术文档阅读能力</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_02">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge fail">FAIL</span>
+        <h2>case_02 <span class="sub">李婉清</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: pm_ai_transition</p>
+        <p class="err">简历存在残留未渲染标记，如【】符号；且工作经历部分有‘（原文内容缺失，无法进行改写）’字样。</p>
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写（含意向限定的合规出现: LLM、prompt engineering、智能客服）</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，‘持续关注LLM产品方向’用软词，判定PASS。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：2018.07 - 2026.06 = 7.9 年 ≥ JD 要求 5 - 0.5 = 4.5 年 → 满足；前置检查 B：触发，意向语句为‘持续关注 LLM 产品方向，同步自学 prompt engineering’。改写后简历展示邻域能力且有转型意向，覆盖核心要求，判定 PASS。</div></div><div class="dim fail"><strong>表达_专业度</strong>: FAIL<div class="reason">简历存在残留未渲染标记，如【】符号；且工作经历部分有‘（原文内容缺失，无法进行改写）’字样。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">李婉清
+邮箱：liwanqing@example.com  电话：139-0000-0002
+
+【教育背景】
+】
+2014.09 - 2018.06  某重点大学  市场营销  本科
+2020.09 - 2022.06  某重点大学  工商管理  硕士（在职）
+【
+
+【工作经历 ⭐】
+某电商平台 产品经理 → 高级产品经理（2018.07 - 至今）
+- 主导付费会员卡从0到1的产品设计与落地，上线6个月覆盖200万付费用户，积累了完整的产品规划与落地经验
+- 建立A/B测试机制，全年累计执行30+实验，迭代4个核心策略，以数据驱动产品决策与体验优化
+- 推动用户分层运营策略落地，基于用户行为与LTV、留存、转化等指标，实现会员复购率提升18%
+- 跨部门协作：与设计、研发、数据、运营、客服等多团队高效对齐，保障产品从概念到上线的全流程
+- 持续关注LLM产品方向（如智能客服、AI写作等），同步自学prompt engineering，探索将技术能力转化为用户价值的方法
+
+【工作经历】
+（原文内容缺失，无法进行改写）</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_03">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge fail">FAIL</span>
+        <h2>case_03 <span class="sub">王思宇</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: data_analysis_entry</p>
+        <p class="err">判定：FAIL。理由：简历中存在未闭合的方括号，属于残留未渲染标记。</p>
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写（含意向限定的合规出现: 业务分析报告）</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历未出现原简历完全无依据的内容，硬词表述有对应资历依据，无伪经验引入。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：候选人应届，满足 JD 年限要求；前置检查 B：触发，引用意向语‘持续关注 A/B 测试方法’。改写后简历新增‘搭建并维护核心业务指标看板’，与原简历诚实匹配，覆盖核心要求，判定 PASS。</div></div><div class="dim fail"><strong>表达_专业度</strong>: FAIL<div class="reason">判定：FAIL。理由：简历中存在未闭合的方括号，属于残留未渲染标记。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">王思宇
+邮箱：wangsiyu@example.com  电话：137-0000-0003  城市：共享单车使用模式分析（2025.09 - 至今）- 抓取北京某共享单车开放数据- 使用 Python 完成时空模式可视化分析
+
+【教育背景】
+】
+2022.09 - 2026.06  某 985 大学  统计学  本科（应届）
+GPA: 3.6/4.0，专业排名 15/120
+【
+
+【实习经历 ⭐】
+协助维护核心业务指标看板（用户活跃、留存、新增），支撑业务方日常决策；参与用户分群项目，利用编程工具完成数据清洗，为后续分析提供基础；整理业务方需求文档，跟进数据需求排期，保障分析流程顺畅。同时，持续关注业务分析报告的撰写方法，提升业务洞察能力。
+
+【项目经验 ⭐】
+【项目经验】
+1. 电影评分预测（2024.10 - 2024.12）：基于IMDB数据集，使用pandas和scikit-learn构建回归模型，R²达到0.72，积累了特征工程与模型评估经验。
+2. 城市共享单车使用模式分析（2025.09 - 至今）：抓取北京共享单车开放数据，使用Python进行时空模式分析，产出图表展示用户骑行规律，锻炼了数据采集与探索性分析能力。
+
+【技能】Python（pandas、scikit-learn、matplotlib）、Excel、英语CET-6。此外，持续关注A/B测试方法，了解实验设计与结果分析流程。
+
+【实习经历】
+（原文内容缺失，无法进行改写）</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_04">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge fail">FAIL</span>
+        <h2>case_04 <span class="sub">候选人04</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: backend_java</p>
+        <p class="err">判定：FAIL；理由：简历中存在残留未渲染标记，如'、Vue.js'和多处'**'。</p>
+        <div class="dims"><div class="dim fail"><strong>规则_反捏造</strong>: FAIL<div class="reason">检测到硬性无依据扩写（无意向限定）: 架构设计、主导</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，硬词表述均有对应资历或实操依据，判定 PASS。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：2017.11 - 2026.06 = 8.7 年 ≥ JD 要求 6 - 0.5 = 5.5 年 → 满足；前置检查 B：触发，意向语为‘持续关注营销中台方向’。改写后简历诚实内容及意向表达覆盖 JD 核心要求，判定 PASS。</div></div><div class="dim fail"><strong>表达_专业度</strong>: FAIL<div class="reason">判定：FAIL；理由：简历中存在残留未渲染标记，如'、Vue.js'和多处'**'。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人04
+城市：、Vue.js
+
+【教育背景】
+2010.09-2014.07 长江大学(统招本科) 计算机科学与技术
+
+【工作经历 ⭐】
+2020.11-2023.09 有赞 - Java后端开发，负责美业交易相关功能的维护与迭代，主要涉及订单、支付、履约等核心流程，积累了交易系统开发经验。此外，持续关注营销中台方向。
+
+【项目经验 ⭐】
+参与多个业务系统的后端开发与架构设计，重点聚焦交易链路、支付对接与系统重构。在**次卡升卡**项目中，负责技术方案设计与卡、交易、支付系统模块开发，引入卡价值计算模型与标记支付特殊处理，支持商家基于旧卡剩余价值升级新卡，间接提升新商家签约率。在**有赞美业对接抖音小程序**项目中，担任项目经理并主导技术方案设计，梳理外部对接流程与接口，解决抖音担保支付与原有支付系统的兼容问题，完成订单正向流程、支付与履约模块开发，助力商家接入抖音渠道。在**有赞美业线上下单重构**项目中，与团队基于DDD方法论将线上下单拆分为参数校验、初始化、业务逻辑校验、计算、组装、入库后处理等正交组件，并完成线上服务下单、卡下单等场景的重构与全量灰度上线，总结DDD落地经验并向团队分享。此外，参与悟空快运order服务订单相关需求评审、表结构设计与开发，以及众包平台找人模块的开发与维护。技术栈涵盖Dubbo、Spring Boot、MyBatis、MySQL、Spring Cloud微服务组件等。持续学习营销活动设计，关注营销中台方向的技术实践。
+
+【工作经历】
+2017.11-2020.10 顺丰 | 参与创新产品（宠宝机票、快运产品等）的研发，主要负责交易模块，涉及订单与支付相关业务逻辑的开发与维护；同时负责对接大网的功能迭代，涵盖订批舱、发提货等流程，保障散航资源稳定。
+
+【工作经历（简）】
+负责众包平台后端模块的维护与迭代开发，涉及人才市场、工作台、服务商等业务模块，将业务需求转化为稳定的技术实现。
+
+【工作经历（简）】
+2014.07-2016.02 文思海辉  
+- 前期负责现有系统新功能迭代，包括数据补录二次开发等  
+- 后期参与新系统研发，包括元数据管理等模块建设  
+
+**技术能力**  
+- 9年Java开发经验，Java基础扎实，对JVM、GC有一定理解  
+- 熟练使用Spring Boot、Spring Cloud（Eureka、Config、Zuul、Ribbon、Hystrix、Feign）、Spring、SpringMVC、MyBatis  
+- 数据库基础扎实，熟练使用MySQL，了解MySQL原理  
+- 熟悉Redis中间件，了解Redis分布式锁  
+- 熟悉Maven、Linux常用命令  
+- 熟悉Dubbo中间件  
+- 具备独立负责功能设计与开发的能力，能快速定位并解决线上问题  
+- 具备良好的团队协作和沟通能力，对待工作认真负责  
+- 多年互联网从业经验</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_05">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_05 <span class="sub">候选人05</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: ai_product_transition</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写（含意向限定的合规出现: RAG、知识库）</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，硬词表述有对应资历依据，判定PASS。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：未提及工作年限要求，不涉及此判定；前置检查 B：触发，意向语如‘持续关注大模型应用方向’。改写后简历诚实内容结合意向表达，覆盖 JD 核心要求超 80%，满足岗位需求。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS。理由：简历格式清晰，表达专业，无硬伤清单中的问题，各板块结构合理。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人05
+
+【教育背景】
+华南理工大学  新闻学  本科
+- 本科期间培养了较强的信息整理与分析能力,有助于在AI产品经理岗位上整理归类前沿信息。同时,对不同领域的广泛了解,为开展AI领域的竞品与用户调研奠定基础,能更好地分析行业趋势和竞争格局。
+
+【实习经历 ⭐】
+在有米科技担任产品助理期间，主导从0到1搭建AI营销系统，负责需求调研、产品设计与项目推进，推动AI产品从概念到落地。凭借对AI技术的理解与精准的产品设计，成功助力系统实现月收入超10万的收入增长，积累了AI产品落地的完整经验。此外，持续关注大模型应用方向，主动学习相关产品形态与行业动态。
+
+【项目经验 ⭐】
+作为项目负责人，负责AI华工图书馆研发项目，结合AI能力将图书馆资料转化为线上版，满足学生便捷利用图书馆资料的需求。通过优化流程与功能设计，有效提升借书效率达30%，锻炼了需求分析与功能设计能力，加深了对AI与传统业务结合的理解。此外，持续学习RAG/知识库产品形态，关注大模型应用方向。
+
+【项目经验 ⭐】
+在辩论队担任成员期间，系统参与辩题研究与讨论，主动收集资料并深入分析不同观点，锻炼了需求拆解与逻辑表达能力。面对复杂议题，积极探索多种论证路径，展现出对新知识的快速学习能力。基于此经历，持续关注AI与传统业务结合方向，思考如何通过需求分析提升业务效率，并持续学习RAG/知识库产品形态，为后续AI产品工作积累认知基础。
+
+【个人概述】
+本科新闻学专业，具备信息处理与逻辑表达能力。曾获国家奖学金，辩论队经历锻炼了团队协作与责任感。对AI产品迭代与新技术保持高度好奇，持续学习AI产品相关知识，渴望在AI产品经理岗位上发挥价值。
+
+【技能】
+- 具备良好的信息分析与整理能力
+- 拥有出色的沟通协作能力
+- 掌握英语四级</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_06">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_06 <span class="sub">候选人06</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: education_delivery</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，且使用硬词处原简历有对应资历或实操依据，未引入伪经验。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：2017.02 - 2026.06 = 9.3 年 ≥ JD 要求 0 - 0.5 = -0.5 年 → 满足；前置检查 B：未触发；改写后简历中课程交付全流程、直播支持等内容贴合 JD，满足核心要求。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS。理由：简历格式清晰，表达专业，无硬伤清单中的问题，工作经历按公司罗列且有具体成果。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人06
+
+【工作经历 ⭐】
+极周在线科技(广州)有限公司 | 运营部运营 | 2023年7月 - 2025年1月
+- 课程交付全流程：从0-1组织策划25期陪跑课程，涵盖主题选定、老师对接、素材筹备、上线招生、开课督学、直播主持、毕业总结等环节，每期招生超1000人，完课率60%以上，带动平台其他课程转化业绩每期约4-10万。
+- 直播支持：独立完成37期直播筹备、宣发、执行和复盘，场观3000~5000人；另协助200场直播的私域宣发，直播间点击占比率约35%。
+- SOP沉淀：通过毕业总结环节沉淀课程交付SOP，形成可复用的流程文档，支持后续课程迭代。
+- 协同团队：与讲师、教研、销售及社群团队紧密协作，优化课程流程与服务体验，推动会员续费率较入职时提升20%。
+- 用户运营：建立18个超450人的企微会员群，通过课程测评、抽奖、线下见面会等活动维护用户，会员续费率提升20%。
+
+广州海汇铭康信息技术有限公司 | 运营部社群运营 | 2022年1月 - 2023年6月
+- 项目执行：承接品牌社群卖货全链路，包括任务拆解、素材准备、快闪群执行、复盘总结，每次超额完成项目指标5%~10%。
+- 私域运营：通过分析用户行为优化运营策略与话术，二次销售转化率从14%提升到20%。
+- 文案策划：编写超800条卖货型文案，落地3个专题活动。
+
+在家早教项目运营 | 悦宝成长研究院 | 2020年12月 - 2021年12月
+- 课程运营：把控课程项目落地进度，设计用户学习与转化路径，制定SOP；推动超200门知识付费课、3门教具引流课上架，系统课转化率21.7%，累计业绩超380万。
+- 数据分析：整理统计课程和平台运营数据，识别关键指标，为业务策略迭代提供数据支持。
+
+广东快乐种子科技有限公司 | 市场部渠道运营&amp;社群运营 | 2019年8月 - 2020年11月
+- 社群运营：负责快闪群和训练营，通过讲座、干货输出等形式实现用户转化，参与人次达40万+，协助转化正课人数2600+。
+- 渠道对接：累计合作近100个渠道，月均业绩超45万；通过优化活动流程将某渠道转化率从3.5%提升到22%。
+
+广东种子力量教育科技有限公司 | 运营部用户运营(客服方向) | 2018年11月 - 2019年6月
+- 客服咨询：处理售前售后咨询10万+人次，整理问题成档。
+- 社群管理：负责210多个微信群运营，社群内复购流水达11万+/月。
+
+社群运营(学员服务方向) | PiPaCode在线少儿编程 | 2017年2月 - 2018年10月
+- 学习顾问：辅导学员课程学习，跟进学习进度，转化率32.4%，续课率89.9%。
+- 教务管理：批改作业，入门课到课率83%、完课率51%；正式课到课率96%、完课率92%。</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_07">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_07 <span class="sub">候选人07</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: materials_energy</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">判定：PASS；理由：改写后简历未出现原简历完全无依据的内容，也无原简历无对应资历或实操依据的硬词表述。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：候选人无工作年限要求，满足；前置检查 B：触发，意向语‘持续关注电池材料方向，持续学习电化学储能技术’；判定：PASS。改写后简历体现多段实习经历，覆盖实验设计、数据整理等，专业匹配，有相关意向。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS。理由：简历格式清晰，表达专业，无硬伤清单中的问题，各板块结构合理。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人07
+
+【教育背景】
+2023.08 - 2025.05 美国宾夕法尼亚大学 生物分子与化学工程- 硕士 费城
+GPA：3.43/4.0核心课程:新能源与可持续发展、电化学能源转化与储存、分子建模与模拟、环境与可持续发展材料
+2019.08 - 2023.06 美国加利佛尼亚大学,圣塔巴巴拉分校 化学工程 – 本科 圣塔巴巴拉
+
+【实习经历 ⭐】
+2024.05 - 2024.08 复旦大学分子催化与功能材料实验组 研究助理 上海
+- 参与低浓度氨气吸附实验，负责**材料制备**：制备4种晶体材料，覆盖最低至10微米的5种粒度区间，积累多粒度材料合成经验
+- 独立设计球磨**实验设计**方案，系统考察环境、转速及球料配比对球磨效果的影响，通过分析筛出数据优化工艺参数，实现一天内将原样品研磨至10微米以下的制备效率
+- 针对潮湿天气导致实验中断的问题，提出并验证“烘干-球磨间隔”方案，保障实验连续性，体现**实验设计**中的问题解决能力
+- 使用穿透法、重量法及吸附等温线仪器进行**吸附性能测试**，分析颗粒大小对吸附结果的影响，得出粒度可提升吸附性能高达20%的结论
+- 将球磨优化方案与吸附实验数据进行系统**数据整理**，撰写技术报告并向组内发表，为后续同类材料实验提供可复用的经验
+
+【实习经历 ⭐】
+参与氢能源汽车氢气生产与运输的概念设计，利用MATLAB与Aspen HYS对反应、分馏、热传递、碳捕捉等流程进行建模与仿真；收集与分析管道及卡车运输方案资料，开展经济性与安全性对比分析，对全部流程节点进行HAZOP分析并制定潜在危险预警方案；估算设备成本与运营成本规模，完成现金流分析（15年累计收益达$2000MM），并通过蒙特卡洛模型进行风险模拟；向项目团队展示流程设计结果，撰写50页技术报告，论证氢能源在化工领域的可盈利性与可操作性。此外，持续关注电池材料方向，持续学习电化学储能技术，关注能源转化与储能领域的交叉应用。
+
+【实习经历（简）】
+2024.10-2024.12 Wharton ESG Initiative（沃顿商学院旗下ESG项目） ESG顾问 费城  
+- 针对清洁燃料标准（CFS）政策实施背景，系统梳理各州可再生能源配额标准（RPS）对可再生电力需求的驱动机制，分析风能、太阳能行业在2015年后的自主增长路径及资本吸引因素，形成政策-市场关联分析报告  
+- 整理并对比现有及拟定的CFS计划，基于RPS历史经验，提出推动绿色能源需求的政策改进建议及优先实施州的筛选逻辑  
+- 撰写阶段性技术报告与政策分析文档，支撑跨团队沟通与决策，积累能源政策与市场数据的结构化整理能力
+
+【实习经历（简）】
+参与陕西某金控公司“碳中和、碳达峰”政策背景下的数据分析项目，为客户决策提供支持。分析陕西省近5年碳排放相关产业的行业趋势，并梳理各金控公司财报中与绿色低碳转型有关的信息。利用SQL对数据库进行查询与处理，使用Tableau创建可视化报告，向导师与客户汇报分析结果。该经历锻炼了数据整理、趋势分析及可视化呈现能力，可迁移至材料研发中的实验数据处理与阶段性总结工作。
+
+【实习经历（简）】
+参与变压吸附(PSA)技术在苯乙烯生产流程中的应用研究，设计实验测试不同压力条件下各气体在Zeolite 5A上的吸附特性，分析吸附行为与工艺参数的关系；将实验数据导入含PSA的流程模型，与传统流程设计进行经济性对比，通过现金流分析验证工艺改进潜力（利润提升10%）。</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_08">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge fail">FAIL</span>
+        <h2>case_08 <span class="sub">候选人08</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: finance_securities</p>
+        <p class="err">检测到硬性无依据扩写（无意向限定）: 私募基金</p>
+        <div class="dims"><div class="dim fail"><strong>规则_反捏造</strong>: FAIL<div class="reason">检测到硬性无依据扩写（无意向限定）: 私募基金</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，且‘熟练’‘娴熟’原简历有对应资历依据，判定通过。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查A：2018.10 - 2026.06 = 7.8年 ≥ JD要求0 - 0.5 = -0.5年 → 满足；前置检查B：未触发；判定：PASS。改写后简历有金融专业背景，有机构业务、销售管理等经验，具备合规和服务意识，有相关从业资格。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS；理由：简历格式清晰，表达专业，无硬伤清单中的问题，内容有条理且信息完整。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人08
+
+【教育背景】
+University of North Texas (北德州州立大学)    商学院    金融系        理学硕士
+University of North Texas (北德州州立大学)    商学院    金融系        本科
+GPA:3.454/4.00
+
+【工作经历 ⭐】
+太平洋证券广州大道中营业部 | 2022.11-至今 | 总经理助理  
+作为总经理助理，协助机构客户开发工作，重点对接私募、银行等金融机构，参与销售团队日常管理事务，推动业务执行；工作中注重合规意识，确保操作符合证券行业监管要求。
+
+【工作经历 ⭐】
+2018.10-2022.11 机构业务部职员
+
+负责管理营业部销售团队，根据总部任务协助制定销售方案与奖励机制，带领团队执行销售任务并协调内外部关系。在职期间，引导团队拓展新增资产约3亿，个人累计引入资产1.2亿。
+
+**银行委外与机构合作**：洽谈省内多家银行总行对公机构业务（华兴银行、广州农商行、广州银行），对接其资管与固收部门，为委外资金及券结业务规划匹配项目方案，维持长期合作关系。2019年牵头与侨鑫集团、华兴银行资管合作，参与2亿规模委外资金定制产品及交易渠道开通。
+
+**私募基金合作**：为广东兆亿、上海威拿资产等中小型私募及交易机构开通产品账户与交易渠道，提供中低频量化极速交易系统及算法软件支持，引入量化交易性资产1300万；持续维护客户关系，跟进后续产品代销。
+
+**城投债承揽**：2019年与投行债券部门合作，牵头主导河源城投公司5亿城投债承揽项目，同年共同开发贵州双龙城投债承揽及承销业务（承销规模3亿）；积极引荐地方政府城投债业务，掌握询价议价及发债要点。
+
+**客户关系维护与资产引入**：负责海航、康美、正邦等债转股债务重组项目，制定营销计划，带领团队为客户开通机构账户、办理股票接收及后续金融服务，通过该项目累计引入债权转换股权资金8000万（个人引入4000万）。此外，为潜在投资者提供股票、基金账户开通及产品咨询服务，累计产品销售额2000万。
+
+**自媒体创新试点**（简要提及）：2020年牵头太平洋证券全国首个自媒体抖音试点项目，运营半年粉丝8.3万，有效户200余户，引入资产1400万，辅助公司品牌宣传与投资者教育。
+
+【个人概述 ⭐】
+具备八年海外留学经历，持续关注金融市场动态与产品，熟练应用财务及Office办公软件；英语口语、听力、写作娴熟，流利使用普通话、粤语及英语；成熟稳重，严谨细致，责任心强，保密意识强，忠于职业操守；具有良好的沟通表达能力和团队合作精神；具有强烈的客户服务意识，以诚待人；目标明确，善于制定详细计划并执行，实现目标。曾获Dean List (Fall 2013) 学业奖状。
+
+【实习经历】
+荷兰ING银行上海分行 市场风险部实习生（2015.6-2015.8）
+- 协助金融部完成未来投资本金情况预测，参与数据收集与整理，支持机构客户服务流程
+- 协助市场风险部为客户分析金融产品及市场风险，积累对金融机构客户需求的理解
+- 整理银行长期与短期财务报告，负责与后台部门传递沟通，保障信息流转效率
+- 承担银行及客户资料的中英文翻译工作，确保跨部门、跨机构沟通准确
+
+广东华人出国事务有限公司 培训、顾问实习生（2012.6-2012.8）
+- 根据客户具体情况提供美国、加拿大留学及教育规划咨询服务，设计备考、签证及留学方案
+- 提供签证面试咨询，检查出国材料准备，承担翻译及客户沟通工作
+- 协助客户进行申请文书写作、选校沟通及面试辅导，模拟签证流程与英语口语培训
+
+从业资格：证券市场基本法律法规从业资格证、证券市场基础知识从业资格证、基金从业资格</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_09">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_09 <span class="sub">候选人09</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: data_analysis</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，硬词表述有对应资历依据，判定PASS。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：候选人无工作年限要求，满足；前置检查 B：触发，意向语‘持续关注数据驱动决策方向’。改写后简历诚实展示专业背景、工具技能及项目经验，覆盖 JD 核心要求，判定 PASS。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS；理由：简历格式清晰，表达专业，无硬伤清单中的问题，结构合理信息完整。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人09
+
+【教育背景】
+成都外国语学校 2012年9月——2018年5月
+康涅狄格大学 University of Connecticut 2018年9月——2022年7月经济转统计本科 GPA3.1/4.0呈上升趋势
+新加坡南洋理工大学 2023年8月——2024年6月分析学 硕士
+
+【项目经验 ⭐】
+参与大数据宏观经济预测项目（2022.07-2023.01），协助导师进行数据收集与清洗，利用大数据构建模型并制作图表，用于宏观经济趋势预测。在此过程中，积累了数据清洗、数据可视化与指标分析的经验，并接触了Python/R等数据分析工具。
+
+参与共享经济研究项目（2022.07-2023.01），协助导师收集并分析Airbnb、Uber等共享经济平台的数据，通过数据整理与图表制作，研究共享经济模式。项目实践强化了数据清洗、指标分析能力，并进一步了解Python/R在数据分析中的应用。
+
+【实习经历（简）】
+广发证券成都分公司 | 机构业务部门实习生 | 2023年3月—2023年5月
+- 负责机构业务部门日常数据整理与维护，确保数据准确性和及时性，为月度报告提供基础数据支持。
+- 独立完成月度报告的数据汇总、校验与撰写，清晰呈现业务动态与关键指标，锻炼了报告表达能力与数据逻辑思维。
+
+【个人概述（简）】
+具备经济学与数据分析基础，熟练使用数据分析软件，对区块链领域有基础了解。具备较强的自主学习能力，持续关注数据驱动决策方向，渴望在实践中积累经验并快速成长。
+
+【技能】
+- 计算机技能: 掌握基本的数据分析软件(rstudio,SAS)使用方法
+- 有一定的python基础
+- 能熟练使用Office办公软件
+- 语言技能: 能够使用流利的英语写作以及与人交流</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_10">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_10 <span class="sub">候选人10</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: content_ops</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写（含意向限定的合规出现: 转化率）</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历不存在原简历完全无依据的内容，且硬词表述有对应资历或实操依据，判定通过。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：工作年限未提及要求，不涉及此检查；前置检查 B：未触发，改写后简历无合规意向语。改写后简历凸显宣传内容策划、用户调研、数据评估等能力，覆盖 JD 核心要求超 80%，判定 PASS。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS；理由：简历格式清晰，表达专业，无硬伤清单中的问题，内容有条理。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人10
+
+【教育背景】
+南京大学 (985 双一流 )               南京
+戏剧影视文学 专业  本科                       2019 年 09 月 – 2025 年 06 月• GPA:4.28/5.0
+• 核心课程: 中国电影 、影视剧写作 、影视制作 、人工智能产业概论 、全球化与环境经济学 、产品供应链 、国际贸易 、商务智能与大数据 、创业学与创新管理 、Python 语言程序设计 等
+• 荣誉 奖项 :南京大学第 27 届基础学科论坛常规赛道三等奖 、南京大学石榴籽育人工作室“奋进青年讲师团”讲师 、南京
+大学 2022 年度少数民族学生石榴籽奖学金 、南京大学 2022 年度栋梁奖学金优秀奖 、南京大学少数民族优秀学生 、2021
+年度 96602 部队优秀科技学术论文二等奖 、96724 部队“四有”优秀士兵 、96724 部队“新闻报道标兵个人” 等
+
+【工作经历 ⭐】
+负责宣传内容策划与撰写，累计产出国家级新媒体稿件100+篇及各类公文300+篇，具备扎实的文案撰写与内容策划能力；在稿件选题与发布中关注受众反馈，积累用户洞察意识，并逐步形成内容策略思维。同步完成论文《基于侧拉箱体结构的多业务智能化技术保障车设计方案》并获优秀科技学术论文二等奖，论文撰写中接触数据分析方法，用于方案论证与效果评估，进一步强化了数据驱动决策的认知。
+
+【项目经验 ⭐】
+军级宣传项目（核心成员） 2021.05 – 2022.05
+- 内容策划：负责两个军级先进典型宣传项目的全流程策划与执行，包括资料收集（用户调研）、文案撰写、视频拍摄剪辑，制定多媒体宣传方案，累计发布中央级新媒体稿件22篇，编撰心得体会24篇。
+- 用户调研：通过深入挖掘先进事迹，提炼人物精神内核，确保内容贴合受众需求。
+- 运营方法：统筹项目进度、发布节奏与复盘总结，沉淀可复用的宣传方法论。
+- 转化率：关注内容传播效果与转化率提升，通过量化指标（如稿件阅读量、互动数据）评估宣传成效，持续优化内容方向。
+
+科研成果：
+- 独著《中国空军电影史》；
+- 独作论文《Reliability Analysis of Multiple Machine Learning Methods...》运用机器学习方法分析战争片票房影响因素，具备数据驱动决策能力；
+- 另知网收录5篇独作论文（戏剧影视、数据统计、机器学习方向）。
+
+个人技能：熟练使用Office、PS、Pr、SPSS等工具，具备英语CET-6，适应全英文工作环境。</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_11">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge error">ERROR</span>
+        <h2>case_11 <span class="sub">候选人11</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: cv_algorithm</p>
+        <p class="err">[case_11] 预处理失败: 预处理产出空内容（work/internship/project/summary 全为 0），本地 fallback 未能识别简历结构。原文前 200 字: 1\n候选人11个人简历\n姓 名 : 洪 赫 性 别 : 男 出 生 年 月 : 2003.11 身 高 : 180CM\n毕业院校:华南师范大学\n专业:数据科学与分析、人工智能\n学历:硕士(已录取)\n联系电话:[PHONE](微信同号)\n电子邮箱：[EMAIL]\n胜任岗位:数据工程师、AI 工程师、人工智能应用工程师等\n深圳乐动机器人科技有限公司 2024 年 5 月至今 2024 年 8 月 实习</p>
+        <div class="dims"><div class="dim na">规则_反捏造: —</div><div class="dim na">语义_诚实度: —</div><div class="dim na">岗位_贴合度: —</div><div class="dim na">表达_专业度: —</div></div>
+        <h3>改写输出</h3>
+        <p class="empty">（无输出）</p>
+      </div>
+    </section>
+
+    <section class="case" id="case_12">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge fail">FAIL</span>
+        <h2>case_12 <span class="sub">候选人12</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: junior_backend</p>
+        <p class="err">检测到硬性无依据扩写（无意向限定）: 性能优化</p>
+        <div class="dims"><div class="dim fail"><strong>规则_反捏造</strong>: FAIL<div class="reason">检测到硬性无依据扩写（无意向限定）: 性能优化</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">判定：PASS；理由：改写后简历未出现原简历完全无依据的内容，使用硬词处原简历有对应资历或实操依据。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：候选人实习 0.25 年，虽未达年限但有课程项目经验；前置检查 B：未触发。改写后简历诚实贴合，覆盖 JD 核心要求超 80%，如参与模块开发、用 Git 协作等。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS；理由：简历格式清晰，表达专业，无硬伤，各板块有条理且关键信息完整。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人12
+
+【教育背景】
+悉尼大学 | 计算机科学 | 本科 2023.02-2026.01
+·     主修课程:编程导论(90)、面向对象编程(95)、线性代数(87)、离散数学(83)、数据结构与算法(88)、敏捷软件开发实践(85)、计算模型(85)
+
+【实习经历 ⭐】
+山东红舟信创人工智能有限公司 | 人工智能后台开发实习生 2023.11-2024.02  
+· 模块设计与开发：参与需求分析，将业务需求拆分为模块，明确功能边界与数据流转逻辑，完成模块设计。使用 Java 开发任务调度模块，基于线程池实现任务分配与优先级执行；利用 Python 编写数据处理脚本，完成数据读取、清洗和格式化输出。  
+· 数据库与性能优化：编写高效 SQL 语句并重构索引结构以减少查询延迟；配置缓存更新策略，调整缓存过期时间与同步逻辑，降低多余请求生成，积累性能优化经验。通过日志工具排查代码异常，修正模块间数据传递格式问题，实践错误处理流程。  
+· 文档与规范：撰写接口文档定义参数与数据格式，整理任务处理流程与模块调用逻辑，编写技术文档支持后续维护。关注工程规范，了解 Git 版本协作与 CI/CD 基础概念，持续学习相关实践；同时关注单元测试方法，在开发中注重代码质量。  
+· 框架调研与学习：学习 HTTP 协议与缓存技术，调研 Flask 和 Django 框架功能，搭建环境并实现基础模块。此外，持续关注 Spring Boot 框架的发展与应用。  
+· 拓展实践：学习前端语言，完成简单的 GUI 开发与后端对接。
+
+【项目经验 ⭐】
+文件管理系统开发 2023.10-2024.01  
+· 模块设计：与团队成员讨论需求，将功能拆分为文件上传、删除、查询及用户账号管理模块，绘制草图设计功能流程，明确输入、处理逻辑与输出，完成模块划分与接口定义。  
+· 技术文档：撰写功能需求说明文档，详细描述各模块职责、交互流程与边界条件，帮助团队对齐理解。  
+· 模块开发：使用 Java 实现文件增删改查及预览功能，按模块独立开发以提升可维护性；添加输入校验逻辑防止无效输入，并为关键代码编写 Junit 单元测试，模拟用户场景验证逻辑正确性。  
+· 数据存储：使用 SQL 设计文件与用户信息表，支持本地文件上传/下载至指定路径，保障数据持久化。  
+· 用户交互：设计命令行 UI，定义添加、修改、删除任务的操作方法，编写提示代码引导用户输入并处理重复命令。  
+· 协作管理：使用 Git 进行版本控制，创建分支开发新功能避免影响主分支，定期提交代码并记录更新；通过会议协调任务分工、跟踪进度，确保项目按计划交付。  
+· 开发工具：使用 Git 管理代码，Jenkins 与 Gradle 实现自动化构建与测试，Junit 完成单元测试覆盖。  
+· 此外，持续学习 Linux 基础，提升服务器环境下的部署与问题排查能力。
+
+【项目经验 ⭐】
+
+
+【个人概述】
+专业背景：具备扎实的计算机科学知识，熟练使用 Java、Python、C 进行模块开发与数据分析，精通 GitHub 版本管理与协作，拥有丰富的项目实践经验。辅助技能：擅长编写技术文档与用户手册，熟悉交互设计与输入验证，具备活动策划与资源整合能力，高效推动项目落地。综合素养：严谨细心，执行力强，灵活应变，计划统筹能力突出，善于沟通协调，注重团队合作，能高效解决问题。</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_13">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_13 <span class="sub">候选人13</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: fpga_hardware</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，硬词表述有对应资历依据，无伪经验引入。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：未涉及年限要求，不存在不满足情况；前置检查 B：触发，意向语为‘持续关注FPGA方案设计与模块开发方向，同步学习Quartus内置仿真工具的使用’。候选人专业背景匹配，有FPGA项目经验，满足核心要求，判定PASS。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS。理由：简历格式清晰，表达专业，无硬伤清单中的问题，内容有条理。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人13
+
+【教育背景】
+莫那什大学(QS372022/9-2024/12 ) 电子信息工程(硕士)
+• 主修课程:无线通信、实时系统设计(同步异步电路)、高级信号处理、高级电路设计、高级电磁学、智能电网、逆变器、电力系统分析、电力电子应用、智能机器人设计等。
+2017/9-2021/6 山东科技大学 通信工程(本科)
+• 主修课程:通信原理、模拟电路、数字电路、微波技术与天线、计算机网络、信号与系统、数字信号处理等。
+• 荣誉奖励:全国大学生数学建模比赛山东省三等奖、发表论文《5G 通信工程管理及未来发展趋势》、获得“智慧通讯工程施工进度调控工程”的软件著作权、多次获得奖学金。技能证书
+• 专业能力:熟练掌握 Quartus、C++、Python、CST、Verilog 、ADS /Ltspice /Altium Designer、Matlab、Labvie、PSSE/
+PSCAD、VScode 等,能够独立进行信号建模、仿真以及嵌入式开发(STM32)等。
+• 语言能力:雅思 6.5,CET-4(519),英语口语流利,能够阅读英文文献,撰写英文论文;普通话二级甲等。
+
+【项目经验 ⭐】
+2024/2-2024/6 摆锤与转盘同步摆动电路设计与FPGA验证 项目负责人  
+• 项目介绍：基于Quartus开发环境，采用Verilog与C语言完成FPGA方案设计，实现摆锤与转盘的同步控制，并在Intel开发板上完成硬件验证与性能测试。  
+• 模块开发：负责系统架构设计，确定核心算法与电路模块，包括信号处理单元和控制单元，使用Verilog完成同步控制电路的模块化开发。  
+• 仿真验证与板级调试：在Quartus中完成时序逻辑的仿真验证，优化电路延迟与功耗；将设计下载至开发板进行多次板级调试，确保系统稳定可靠。  
+• 硬件验证：通过硬件调试与性能测试，验证同步控制功能满足项目指标，积累FPGA全流程开发经验。  
+
+2023/7-2023/11 野生动物监控系统 项目负责人  
+• 基于Raspberry Pi设计监控系统，集成Pi Camera实现高清图像捕捉，采用YOLO V6进行动物检测识别；开发移动应用接口，支持实时监控与动态警报。  
+• 项目已与澳大利亚设备公司洽谈商业合作。  
+
+2023/3-2023/11 无线智能骨科针设计 项目负责人  
+• 使用CST、ADS完成天线与电路仿真设计，实现自动状态调整的智能骨科针；优化控制系统与电机驱动，确保精准响应医院指令。  
+• 相关论文已投稿IEEE，并被邀请参加意大利学术论坛。  
+
+（持续关注FPGA方案设计与模块开发方向，同步学习Quartus内置仿真工具的使用。）
+
+【项目经验 ⭐】
+2017/9-2021/6 班级 班长  
+• 组织班级活动，跟进同学学习动态并解决问题，定期向辅导员汇报班级动向，规划班级管理方案，锻炼了**时序逻辑**思维与团队协调能力。  
+2017/9-2020/6 学院学生会 秘书处副部长  
+• 负责学院20+个社团的财务管理、活动方案审批与修改，以及各类资料整理归档，积累了**硬件验证**相关的文档管理与流程规范经验。  
+• 通过学生会工作接触并了解了**FPGA方案设计**、**模块开发**、**仿真验证**、**板级调试**等基本概念，自学了**Verilog**语言基础及**Quartus**开发环境的使用，为后续技术方向打下基础。
+
+【实习经历（简）】
+2023/11-2024/2 浪潮通信有限公司（济南） 售前工程师  
+- 技术咨询：对接政府智慧教育平台及海外客户，基于公司产品与技术优势，定制通信解决方案（网络架构规划、系统集成方案设计、设备选型建议）。  
+- 招投标：撰写中英文项目标书，展示技术实力与实施方案，并跟进实施周期、售后服务及结项。  
+- 产品演示：制作中英文演示PPT，介绍产品功能、性能优势及行业标杆案例。  
+
+2021/3-2021/6 山东省烟台市电力局 通信维护工程师  
+- 系统维护：对电力局内部通信设备进行检查、升级，保障设备稳定运行。  
+- 故障修复：参与建立故障响应机制，执行通信设备安全防护管理，定期巡查并预防潜在问题。</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_14">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_14 <span class="sub">候选人14</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: admin</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，且硬词表述有对应资历或实操依据，判定通过。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：2019.01 - 2026.06 = 7.5 年 ≥ JD 要求 0 - 0.5 = -0.5 年 → 满足；前置检查 B：未触发；判定：PASS。改写后简历详细描述会议组织、公文处理等工作，贴合岗位职责，技能和经历满足任职要求。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS；理由：简历格式清晰，表达专业，无硬伤清单中的问题，工作经历描述有条理。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人14
+
+【教育背景】
+2014.09-2018.06广东海洋大学寸金学院(现湛江科技学院)信息管理与信息系统本科(学士)
+
+【工作经历 ⭐】
+具备日常行政事务处理能力，熟悉会议组织、公文处理、档案管理等流程；具备极强的跨部门沟通能力，文字处理能力强，能够编写规范化的文件和报告；性格稳重严谨，抗压能力强，善于自学，关注市场趋势。此外，了解来访接待流程及制度执行要求，注重保密意识。
+
+【工作经历 ⭐】
+2023.06-2024.07 中共龙门县纪律检查委员会办公室职员
+
+- 会议组织：全面筹备各类会议500余场，包括纪委全体会议、案件线索会、常委（扩大）会议等，负责会议物资采购、材料分发、会场布置；协调会议签到、引导入座、维持秩序，并记录会议内容形成纪要分发。其中全县领导干部警示教育会参会人数700余人。
+- 公文处理与档案管理：累计处理公文1100余件，负责登记、分类、编号，按规定流程传阅，注重安全与保密，保障公文处理规范。
+- 来访接待：执行特殊接待任务100余次，制定接待方案，确保任务顺利完成，提升机关形象。
+- 制度执行与整改：协助处理巡视组反馈意见，制定整改方案，跟踪整改进度，工作满意度达90%以上。
+- 跨部门沟通：协调饭堂供应与人员用餐时间，优化后勤保障；同时协调会议相关跨部门事务，保障办公室事务高效。
+
+【工作经历 ⭐】
+2020.01-2021.11 | 综合办公室行政
+- 公文流转与档案管理：负责案件文书送达、传票发放、审理通知等公文流转工作；整合移交一审立案、二审卷宗，处理退卷与重大案件，签收邮寄材料，转交机要文件，确保文件流转规范；累计处理2500+件案件相关档案整理与归档。
+- 费用报销与流程规范：负责诉讼费收取、退费办理及电子票据发放，支持便捷缴费与费用报销材料管理；管理调解案件签收，保障调解流程顺畅，维护办公室流程规范高效。
+
+【工作经历 ⭐】
+2019.01-2019.12
+招聘协助与人事管理：主导编外人员招聘工作，发布招聘信息、筛选简历、组织面试，协助用人部门评估应聘者能力并确定最终人选；建立并维护编外人员信息库，定期更新人员信息，根据部门需求进行人事调配。
+项目与财务支持：负责信息化项目招投标，管理项目文件与合同，跟踪项目进度与验收；负责项目款项支付及部门日常费用报销，了解采购台账管理规范。
+会议筹备与流程优化：高效筹备部门周例会，制定会议计划，负责会场布置、资料准备及会议记录，跟踪会议决议执行；收集新办公系统用户反馈，整理报告并反馈外包方，推动系统流程持续改进，积累流程管理经验。
+此外，关注办公用品管理流程与采购台账管理规范，提升行政综合能力。
+
+【工作经历（简）】
+2019.01-2021.11 广州知识产权法院广州立案庭 书记员（行政方向）
+- 承担立案庭日常行政支持工作，包括案件材料整理、信息录入与文档维护。
+- 协助部门内部流程执行与工作记录，保障办公室运转规范高效。
+- 注重工作严谨性与保密性，确保各类信息处理合规。
+
+【技能】
+- 专业水平:参与《人事管理经理》培训,了解人力资源六大模块相关知识,并取得培训合格证书。---英语水平:CET-4,熟练的英文听、说、读、写能力,英语可以作为工作语言。-计算机水平:计算机二级,熟练使用Word、Excel、PPT等Office办公软件。候选人14Tel:[PHONE]E-Mail：[EMAIL]</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_15">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_15 <span class="sub">候选人15</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: finance_assistant</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，硬词表述有原简历对应资历，无不符合要求处。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查A，JD未要求年限，无年限问题；前置检查B触发，意向语为‘持续关注客户资料整理方法，提升服务意识，为金融业务助理岗位积累经验’。改写后简历专业背景及工作实习经历贴合JD要求，故判PASS。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS；理由：简历格式清晰，表达专业，无硬伤清单中的问题，经历描述有条理。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人15
+城市：理工学院经济学主修课程:微观、宏观经济学、新制度经济学、计量经济学、投资学、产业经济学、当代中国经济、保险学、信息经济学等。
+
+【教育背景】
+2019.9-2022.6湖南商务职业技术学院投资与理财主修课程:财务管理、期货及衍生品基础、期货法律法规、商业银行实务、经济法、金融市场基础知识、计算机应用、经济数学等。2023.9-2025.6广州城市理工学院经济学主修课程:微观、宏观经济学、新制度经济学、计量经济学、投资学、产业经济学、当代中国经济、保险学、信息经济学等。
+
+【工作经历 ⭐】
+2023.6-2023.9 广州市珠宝矿工科技有限公司 运营助理
+- 独立完成日常基础运营（上下架、标题、价格维护），实现日成交品10件以上，成交额8万+。
+- 基于直播数据进行数据分析，提出推广投流方案，被首席主播采纳，创下开播后1小时最高成交额。
+- 协助运营主管进行产品更新，包括主卖点提出和竞品收集，提升产品竞争力。
+- 与首席主播等团队沟通协调，确保方案落地，锻炼了沟通表达能力。
+- 此外，持续关注客户资料整理方法，提升服务意识，为金融业务助理岗位积累经验。
+
+【实习经历 ⭐】
+2022.6-2022.11 广州市东高科技有限公司 用户运营  
+- 收集市场信息与用户数据，定位目标用户群体，并基于客户需求制定个性化投资方案，提供证券业务咨询服务。  
+- 通过持续优化咨询与销售策略，提升客户服务体验与转化率，取得小组业绩排名第一的成绩。  
+- 熟练使用Excel进行数据整理与图表制作，支持业务报表与客户沟通记录。</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_16">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_16 <span class="sub">候选人16</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: ui_design</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写（含意向限定的合规出现: Figma）</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，软词表述符合规则，无无对应资历的硬词表述，判定通过。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：2023.02 - 2026.06 = 3.4 年 ≥ JD 要求 1 - 0.5 = 0.5 年 → 满足；前置检查 B：触发，意向语‘持续学习Figma等设计工具，关注AIGC设计工具在视觉设计中的应用趋势’。改写后简历工作经历贴合岗位职责，满足任职要求，故PASS。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS；理由：简历格式清晰，表达专业，无硬伤清单中的问题，条理分明。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人16
+
+【教育背景】
+本科:美国乔治梅森大学 (2022/12 毕业 )高中:北京潞河中学国际部
+
+【实习经历 ⭐】
+国家电网B端系统设计项目实习 - 视觉/交互设计师（2023年2月-3月）
+负责B端系统网页的交互设计与用户体验优化，通过设计交互方案减少用户操作复杂度，提升用户满意度。制定并推行UI视觉规范，构建统一且具有品牌特色的界面设计模式，推动组件化设计意识，增强产品一致性与复用效率。在高压环境下快速理解业务需求，高效交付高质量设计页面，参与关键项目决策，提供产品功能与视觉效果融合的设计支持。
+
+光明日报出版社发行设计师（2023年3月-7月）
+主导品牌项目的平面创意设计，包括书籍封面、书籍介绍长图及推广活动的宣传物料设计，增强视觉吸引力。设计制作日常宣传材料及策划文稿，为推广活动提供视觉支持。负责会议及活动方案的视觉识别系统（VI）设计，确保统一视觉风格。完成各类宣传品、营销物料等设计任务，保证输出符合高品质标准。
+
+百达传媒新媒体策划&amp;设计（2023年9月至今）
+作为抖音本地生活服务商，负责公司视觉设计，包括公司手册设计，塑造统一且具吸引力的视觉形象，提升企业市场辨识度。为品牌客户（麦当劳、一手店等）策划账号运营策略，设计并组织多类型直播活动及短视频内容，通过创新互动形式提升用户互动。协调团队资源优化执行流程，降低项目成本。同时，持续学习Figma等设计工具，关注AIGC设计工具在视觉设计中的应用趋势，探索提升设计效率与品牌一致性的方法。
+
+【项目经验 ⭐】
+品牌视觉与平面设计（爱可目科技实习）  
+负责设计并印刷在线互动销售及营销材料，确保符合品牌形象与市场定位，为多项推广活动提供视觉支持。整合品牌视觉，组织电子邮件设计与统一风格印刷材料，提升品牌识别度。创造性地开发品牌视觉元素、页面布局及摄影内容，增强用户参与度与品牌曝光。主动提出创新设计方案，与客户、市场及管理团队紧密协作，规划项目流程与时间表，确保高效交付。负责编辑与校对线上及印刷文件，维护品牌专业标准。持续优化设计流程与素材质量，引入新工具和设计方法，提升工作效率与客户满意度。
+
+IP形象与人物设计（喜马拉雅实习）  
+与作者直接对接，理解并贯彻其理念，结合市场需求，参与并负责该有声读物的动画化人物设计及IP形象设计。
+
+创意策划（毕业设计展览）  
+根据参展者需求及展览主题，进行策划、场馆布置、宣发等全流程执行。
+
+组织策划与团队协作（学生会及篮球队）  
+作为华人学生会体育部副部长，负责与大使馆及其他学校学生会对接，组织策划校内外活动；作为篮球队队长，带领训练并参加比赛，积累跨团队沟通与项目管理经验。
+
+此外，持续关注AI工具在设计流程中的应用，探索提升视觉效率与创意表达的方法。</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_17">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_17 <span class="sub">Candidate17</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: backend_java_en</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历未出现原简历完全无依据的项目、量化成就、工具技术声称及跨领域伪装，也无原简历无对应资历依据的硬词表述，判定通过。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：2014.07 - 2026.06 = 11.9 年 ≥ JD 要求 6 - 0.5 = 5.5 年 → 满足；前置检查 B：触发，引用意向语“持续关注营销中台方向”。改写后简历技能和经验覆盖 JD 核心要求，符合岗位需求。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS。理由：简历格式清晰，结构合理，表达专业，无硬伤清单中的问题。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">Candidate17
+城市：HanDate of Birth：[已脱敏]Years of Experience: 9 yearsUniversity: Yangtze UniversityDegree: Bachelor'sJob Target: Java Development Engineer
+
+【教育背景】
+2010.09 - 2014.07 Yangtze University (Full-time Bachelor's) Computer Science andTechnology
+
+【工作经历 ⭐】
+2020.11 - 2023.09 有赞（Youzan）  
+负责美容行业业务线的现有功能维护与新需求迭代，核心负责交易模块，涵盖订单、支付、履约、商品、库存管理、渠道、资产等子模块。在交易系统开发中积累了订单流程、支付对接、履约链路等实践经验，并持续关注DDD领域驱动设计在中台重构方向的应用。此外，持续关注营销中台方向，具备将交易系统经验迁移至营销场景的潜力。
+
+【工作经历 ⭐】
+2017.11 - 2020.10 顺丰速运  
+参与创新产品研发（宠物/婴儿票、快递运输产品等），主要负责交易模块的开发与迭代，涉及订单的预订与调度、取件/派送流程，以及零散航空运输资源的获取与调度。  
+同时负责主网功能的对接与迭代，积累了交易系统、订单调度及物流产品方向的实践经验。
+
+【工作经历（简）】
+负责众包平台的后端维护与新功能开发，包括人才市场、工作空间、服务提供商等模块的迭代与优化。
+
+【工作经历（简）】
+2014.07 - 2016.02  Pactera  
+前期聚焦于现有系统的功能迭代，包括数据二次录入的二次开发工作；后期主要参与新系统的研发，负责元数据管理模块的建设。
+
+【技能】
+- Skills &amp; Expertise-Posses 9 years of Java development experience with solid Java fundamentalsand a good understanding of JVM and GC.--Proficient in using Spring Boot.--Familiar with various Spring Cloud projects, including Eureka, Spring CloudConfig, Zuul, Ribbon, Hystrix, Feign.--Proficient in using mainstream open-source frameworks such as Spring,SpringMVC, MyBatis.--Solid database foundation, proficient in using MySQL, and familiar with MySQLprinciples.--Familiar with Redis middleware, including Redis distributed locks.--Familiar with Kafka message ques.--Familiar with Maven and common Linux commands.--Familiar with Dubbo middleware.--Has practical experience in Domain-Driven Design (DDD) implementation.--Capable of independently designing and developing features.--Able to quickly locate and resolve production issues.--Posses good teamwork and communication skills. Responsible and diligent inwork.--Has several years of experience in the internet industry.-Project ExperienceSub-Card Upgrade Project-Project Description: Enabling merchants to upgrade sold service-count cards(sub-cards) to new cards based on the remaing value of the old card plus atop-up payment from the customer.--Responsibilities:-1.Responsible for designing the technical solution.2.3.Responsible for developing the card, order, and payment modules.4.-Key Points:-1.Previously, sub-cards had no concept of &quot;value.&quot; Phase one handled it bysetting total value as purchase amount, with each use's value beingtotal value divided by total count.2.3.The deducted value from the old card need to be reflected as a paymentmethod, introducing a marked payment method for special handling of thesub-card deduction amount.4.-Tech Stack: Dubbo, Spring Boot, Mybatis, MySQL--Achievement: Supported core merchants' demand for sub-card upgrades,indirectly aiding in new merchant acquisition.-Youzan Beauty Industry - Douyin Mini Program Integration-Project Description: Based on research into Douyin Mini Programs andstatistics on merchant willingness to use them, decided to add the Douyin MiniProgram channel to meet merchants' needs for more personalized sales withinthe Douyin app and enhance the competiveness of the Beauty Industry products.--Responsibilities:-1.Responsible for designing the technical solution.2.3.Acted as Project Manager to drive the project, control progress, andcoordinate risk mitigation, ensuring on-time completion.4.5.Responsible for developing the order forward process, payment, andfulfillment modules.6.-Key Points:-1.This project required external integration, necessitating mapping outexternal processes, touchpoints, and defing interface/fieldspecifications.2.3.Payments within Douyin Mini Programs are escrow payments, differing fromprevious systems, requiring consideration for integrating Douyinpayments while maintaing compatibility with existing ones.4.-Tech Stack: Dubbo, Spring Boot, Mybatis, MySQL, HttpClient--Achievement: Supported Beauty Industry merchants in gradually accessing theDouyin Mini Program.-Youzan Beauty Industry - Online Ordering System Refactoring-Project Description:-1.After several years of development, code complexity had multiplied,leading to increased maintenance costs and reduced efficiency inimplementing new requirements. A decision was made to refactor the codeto clarify business logic and structure, facilitating future maintenanceand iteration.2.3.Considering the cost of refactoring all applications simultaneously, theonline ordering scenario was chosen as a pilot. Success here would leadto gradual expansion to all scenarios.4.5.The refactoring theory was based on DDD and referenced the transactiondesign of the company's internal transaction platform team.6.7.The final implementation decomposed the online ordering process intoorthogonal and complete components based on the following logic. Thesecomponents were then sequenced to complete the flow: ParameterValidation -&gt; Initialization -&gt; Business Logic Validation -&gt; Calculation-&gt; Assembly -&gt; Persistence -&gt; Post-Persistence Processing8.-Responsibilities:-1.In the early phase, collaborated with colleagues to determine therefactoring approach and mapped out the business logic for onlineproduct ordering.2.3.Based on the chosen approach, identified the components for onlineproduct ordering, then proceed with development, testing, andgrayscale release.4.5.Completed refactoring for online service ordering, card ordering, andother scenarios, eventually transitioning from grayscale to full release.6.-Tech Stack: Dubbo, Spring Boot, Mybatis, MySQL--Achievement:-1.Completed full refactoring of the online ordering scenario.2.3.Based on the successful implementation, summarized experience and sharedit with the team, enabling the team to accumulate practical DDDexperience.4.Wukong Express Transport-Project Description: Wukong Express Transport is a platform-based standardair freight product with service commitments and timeliness guarantees. Itincludes functions for product management, order management, transportmanagement, operations management, and financial management. Simply put, it'sa platform where merchants publish end-to-end logistics products for customersto purchase.--Responsibilities: Responsible for requirement review, business analysis,database table design, and development related to the order service.--Tech Stack: Eureka, Spring Cloud Config, Zuul, Ribbon, Hystrix, Feign,Spring Boot, MyBatis, MySQL, Kafka--Achievement: Supported multiple freight forwarders in using the product.-Crowdsourcing Platform-Project Description: A service platform under the sharing economy forsoftware release, project outsourcing/bidding, bounty development, and hiringdevelopers. Includes modules for whole project outsourcing, bounties, part-time work, talent search, and service providers.--Responsibilities:-oResponsible for development and maintenance related to the talent searchmodule of the crowdsourcing platform, including the search process andtalent market.ooResponsible for development and later maintenance of the Crowdsourcing2.0 revamp, including workspace development and talent search moduleoptimization.ooResponsible for development of the Crowdsourcing 3.0 revamp,implementing service provider related functions.o-Tech Stack: Spring, SpringMVC, SpringJDBC, MySQL, Velocity, Vue.js-</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_18">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge fail">FAIL</span>
+        <h2>case_18 <span class="sub">候选人18</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: ai_backend_intern</p>
+        <p class="err">改写后简历声称‘熟练掌握多种编程语言（如C++等）及数据库查询，熟悉主流AI框架’，原简历无对应实操依据，‘熟练’属于硬词，判定FAIL。</p>
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写（含意向限定的合规出现: RAG、Prompt工程）</div></div><div class="dim fail"><strong>语义_诚实度</strong>: FAIL<div class="reason">改写后简历声称‘熟练掌握多种编程语言（如C++等）及数据库查询，熟悉主流AI框架’，原简历无对应实操依据，‘熟练’属于硬词，判定FAIL。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：JD未要求工作年限，不涉及此检查；前置检查 B：触发，改写后简历提到‘持续关注大模型应用方向，持续学习RAG与Prompt工程，探索AI功能原型验证与迭代’。改写后简历诚实内容及意向表达覆盖JD核心要求，判定PASS。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS；理由：简历格式清晰，表达专业，无硬伤清单中的问题。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人18
+
+【教育背景】
+2003年2月-2026年1月                 悉尼大学                计算机科学(全日制本科)
+主修课程:数据结构与算法 (88)、机器学习 (85)、深度学习 (90)、面向对象编程 (95)
+
+【实习经历 ⭐】
+2023.11-2024.02  山东红舟信创人工智能有限公司  AI后台开发(实习)
+参与AI应用后端模块开发，包括需求分析、系统架构设计、技术文档编写与交互流程图绘制。使用Java开发任务调度模块，基于线程池实现任务分配与优先级执行，提升系统资源利用率。利用Python编写数据处理脚本，完成数据读取、清洗与格式化输出，为模型训练提供高质量数据集。负责数据库查询优化，通过重构索引结构将查询效率提升20%，降低系统响应时间。同时学习HTTP协议与缓存技术，调研Flask和Django框架，为后续项目提供技术储备。此外，持续关注大模型应用方向，持续学习RAG与Prompt工程，探索AI功能原型验证与迭代。
+
+【个人概述】
+熟练掌握多种编程语言（如C++等）及数据库查询，熟悉主流AI框架。持续关注AI应用开发方向。</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_19">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_19 <span class="sub">候选人19</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: chemical_process</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后简历无原简历完全无依据的内容，硬词表述有对应资历依据，无伪经验引入。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：未涉及年限要求，无影响；前置检查 B：触发，意向语‘持续关注电化学能源转化与可持续工艺方向’。改写后简历诚实内容覆盖 JD 核心要求，有实验设计、数据分析等经验，满足岗位需求。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS；理由：简历格式清晰，表达专业，无硬伤清单所列问题，内容有条理。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人19
+
+【教育背景】
+2023.08 - 2025.05 美国宾夕法尼亚大学 生物分子与化学工程- 硕士 费城
+GPA：3.43/4.0核心课程:新能源与可持续发展、电化学能源转化与储存、分子建模与模拟、环境与可持续发展材料
+2019.08 - 2023.06 美国加利佛尼亚大学,圣塔巴巴拉分校 化学工程 – 本科 圣塔巴巴拉
+
+【实习经历 ⭐】
+- 参与低浓度氨气吸附实验，负责制备4种晶体材料，覆盖最低至10微米的5种粒度区间，积累了材料制备与吸附实验经验
+- 设计不同环境、转速和球料配比下的球磨实验，分析筛出数据以优化实验条件，成功将原样品在一天内研磨至10微米以下，体现实验设计与数据分析能力
+- 独立解决潮湿天气下实验难题，通过烘干与球磨相间隔的方案保障实验连续性
+- 使用穿透法、重量法及吸附等温线仪器进行吸附实验，得出颗粒尺寸可提升吸附结果达20%的结论，并将优化方案与结果整理成报告向组员发表，支持后续实验改进
+
+【实习经历 ⭐】
+2023.03 - 2023.06 Sewell Oil Company(美国中西部最大的燃料供应商) 流程设计工程师 圣塔巴巴拉
+- 参与氢能源汽车氢气生产与运输的概念设计，运用MATLAB与Aspen HYSYS对反应、分馏、热传递、碳捕捉等化工流程进行流程模拟与建模
+- 收集管道与卡车运输方案资料，开展运输方案的经济性分析与安全性对比，并对所有流程节点进行HAZOP分析，识别潜在危险并制定预警方案
+- 估算设备成本与运营成本，进行现金流分析，结果显示15年累计收益可达$2000MM，并通过蒙特卡洛模型进行风险模拟；向项目团队展示流程设计结果，撰写50页技术报告，论证氢能源领域在化工中的可盈利性与可操作性
+
+【实习经历 ⭐】
+2023.01 - 2023.06 苯乙烯生产流程设计（流程设计组长） 圣塔巴巴拉  
+- 参与变压吸附（PSA）技术在苯乙烯生产流程中的应用研究，设计实验测试方案，测定不同压力条件下各气体在 Zeolite 5A 上的吸附特性，获取关键工艺参数。  
+- 将实验数据导入含 PSA 单元的流程建模（Aspen HYSYS），完成与传统流程方案的经济性对比，通过现金流分析得出可实现利润增长约 10% 的结论。  
+- 基于流程设计与经济性对比结果，撰写技术报告，支撑工艺方案优化决策。
+
+【实习经历（简）】
+2024.10-2024.12 Wharton ESG Initiative（沃顿商学院旗下ESG项目） ESG顾问 费城  
+- 针对清洁燃料标准（CFS）实施背景，为Ambient Fuels制定通过需求侧政策推动绿色能源发展的策略  
+- 分析各州可再生能源配额标准（RPS）对可再生电力需求的驱动作用，梳理风能、太阳能行业2015年后自主增长路径及吸引资本的关键政策要素  
+- 梳理现有及拟定的CFS计划，基于RPS经验提出推动绿色能源需求的政策改进建议，并筛选适合CFS优先落地的州  
+- 持续关注新能源政策与可持续能源方向，关注政策对化工/电化学工艺技术路线的影响
+
+【实习经历（简）】
+参与“碳中和、碳达峰”政策背景下数据分析项目，分析陕西省近5年碳排放相关产业趋势及金控公司绿色低碳转型信息，使用SQL进行数据库分析，并通过Tableau制作可视化报告向客户汇报。此外，持续关注电化学能源转化与可持续工艺方向，了解相关实验设计与数据分析方法。</pre>
+      </div>
+    </section>
+
+    <section class="case" id="case_20">
+      <header class="case-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="badge pass">PASS</span>
+        <h2>case_20 <span class="sub">候选人20</span></h2>
+        <span class="toggle">▼</span>
+      </header>
+      <div class="case-body">
+        <p class="meta">Category: course_ops</p>
+        
+        <div class="dims"><div class="dim pass"><strong>规则_反捏造</strong>: PASS<div class="reason">未检测到硬性无依据扩写</div></div><div class="dim pass"><strong>语义_诚实度</strong>: PASS<div class="reason">改写后的简历无原简历完全无依据的内容，且使用的硬词在原简历中有对应资历或实操依据，未引入伪经验。</div></div><div class="dim pass"><strong>岗位_贴合度</strong>: PASS<div class="reason">前置检查 A：2017.02 - 2026.06 = 9.3 年 ≥ JD 要求 0 - 0.5 = -0.5 年 → 满足；前置检查 B：未触发；改写后简历保留原简历课程运营相关诚实内容，覆盖 JD 核心要求超 80%，判定 PASS。</div></div><div class="dim pass"><strong>表达_专业度</strong>: PASS<div class="reason">判定：PASS；理由：简历格式清晰，表达专业，无硬伤清单中的问题，工作经历阐述有条理。</div></div></div>
+        <h3>改写输出</h3>
+        <pre class="output">候选人20
+
+【工作经历 ⭐】
+- 陪跑课程（训练营）全流程运营：从0-1组织策划25期陪跑课程，涵盖授课主题选定、讲师对接、素材筹备、上线招生、开课督学、直播主持、毕业总结等环节。每期招生超1000人，完课率60%+，带动平台其他课程转化业绩每期4-10万。过程中协同讲师、教研、销售、客服团队，确保课程交付质量；基于完课率、报名数据等指标进行复盘，持续优化运营动作。
+- 直播运营：独立完成37期直播筹备、宣发、执行与复盘，场观3000-5000人；同时协助200余场直播的私域宣发，直播间点击占比约35%。</pre>
+      </div>
+    </section>
+  <footer>Exported from promptfoo · RR-Bench · eval-SHm-2026-06-04T04:14:13</footer>
+</div>
+<script>document.querySelectorAll('.case.fail, .case.error').forEach(el => el.classList.add('open'));</script>
+</body>
+</html>
