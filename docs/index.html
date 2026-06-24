@@ -3,32 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RR-Bench Eval Reports</title>
+  <title>ResumeRewriteBench — Eval Reports</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 48px auto; padding: 0 16px; color: #1a1a2e; }
-    h1 { font-size: 1.4rem; }
-    a { color: #3b5998; }
-    ul { line-height: 2; }
-    .meta { color: #666; font-size: 0.9rem; }
-    code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; }
+    :root {
+      --bg: #f6f7f9; --card: #fff; --text: #1a1a2e; --muted: #64748b;
+      --accent: #3b5998; --border: #e2e8f0; --pass: #0d7a49;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0; background: var(--bg); color: var(--text); line-height: 1.6;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 48px 20px 64px; }
+    h1 { font-size: 1.6rem; margin: 0 0 8px; }
+    .subtitle { color: var(--muted); margin: 0 0 32px; font-size: 0.95rem; }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin-bottom: 20px;
+    }
+    .card h2 { font-size: 1rem; margin: 0 0 12px; }
+    .card p { margin: 0 0 12px; color: var(--muted); font-size: 0.9rem; }
+    .reports { list-style: none; padding: 0; margin: 0; }
+    .reports li {
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .reports li:last-child { border-bottom: none; padding-bottom: 0; }
+    .reports a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .reports a:hover { text-decoration: underline; }
+    .tag {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px; margin-left: 8px;
+      background: #e8f5ee; color: var(--pass); vertical-align: middle;
+    }
+    .meta { color: var(--muted); font-size: 0.82rem; display: block; margin-top: 4px; }
+    .links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
+    .links a { color: var(--accent); font-size: 0.9rem; }
+    code {
+      background: #f1f5f9; padding: 2px 6px; border-radius: 4px;
+      font-size: 0.82rem;
+    }
+    footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 40px; }
   </style>
 </head>
 <body>
-  <h1>Resume Rewrite Bench — Eval Reports</h1>
-  <p class="meta">Static reports exported from promptfoo evals.</p>
-  <ul>
-    <li>
-      <strong><a href="eval/full_20_v5.html">Full 20 cases (v5) — 12/20 PASS</a></strong>
-      <span class="meta"> · latest · eval-b7X-2026-06-04T06:49:16</span>
-    </li>
-    <li>
-      <a href="eval/full_20_v3.html">Full 20 cases (v3) — 12/20 PASS</a>
-      <span class="meta"> · eval-SHm-2026-06-04T04:14:13</span>
-    </li>
-  </ul>
-  <p class="meta">
-    Regenerate locally:<br>
-    <code>node scripts/export_eval_html.cjs reports/evals/&lt;file&gt;.json -o docs/eval/&lt;name&gt;.html</code>
-  </p>
+  <div class="wrap">
+    <h1>ResumeRewriteBench</h1>
+    <p class="subtitle">
+      中文简历改写诚实度 benchmark · 可交互评测报告
+    </p>
+
+    <div class="card">
+      <h2>关于这个项目</h2>
+      <p>
+        测量 LLM 在简历改写时会不会「为了贴合 JD 而虚构经历」。
+        20 份脱敏真实简历 × 4 评分维度（反捏造 / 诚实度 / 贴合度 / 专业度）。
+      </p>
+      <div class="links">
+        <a href="https://github.com/melody-ling-L/eval-resume">GitHub 仓库</a>
+        <a href="https://github.com/melody-ling-L/eval-resume/blob/main/docs/METHODOLOGY.md">方法论</a>
+        <a href="https://github.com/melody-ling-L/judgebuddy">JudgeBuddy 标注工具</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>评测报告</h2>
+      <p>点击展开逐 case 的输入、模型输出、分维度评分。</p>
+      <ul class="reports">
+        <li>
+          <a href="eval/full_20_v5.html">Full 20 cases (v5)</a>
+          <span class="tag">latest</span>
+          <span class="meta">12/20 PASS · eval-b7X-2026-06-04 · 生产流水线评测</span>
+        </li>
+        <li>
+          <a href="eval/full_20_v3.html">Full 20 cases (v3)</a>
+          <span class="meta">12/20 PASS · eval-SHm-2026-06-04</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>本地重新生成</h2>
+      <p>
+        <code>node scripts/export_eval_html.cjs reports/evals/&lt;file&gt;.json -o docs/eval/&lt;name&gt;.html</code>
+      </p>
+    </div>
+
+    <footer>
+      ResumeRewriteBench · <a href="https://github.com/melody-ling-L/eval-resume">melody-ling-L/eval-resume</a>
+    </footer>
+  </div>
 </body>
 </html>
